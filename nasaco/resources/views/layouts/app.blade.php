@@ -116,5 +116,11 @@
 <!-- AdminLTE App -->
 <script src="admin-lte/dist/js/app.min.js"></script>
 
+<script src="js/xlsx.core.min.js"></script>
+
+@stack('scripts')
+
+
+
 </body>
 </html>
