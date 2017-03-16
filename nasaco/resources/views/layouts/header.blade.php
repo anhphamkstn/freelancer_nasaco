@@ -1,6 +1,6 @@
   <header class="main-header">
     <!-- Logo -->
-    <a href="index2.html" class="logo">
+    <a href="#" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini">
         <i class="fa fa-home" aria-hidden="true"></i>
