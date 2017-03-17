@@ -197,6 +197,7 @@
 
 @push('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
         var dashboard = new window.Controller.Dashboard();

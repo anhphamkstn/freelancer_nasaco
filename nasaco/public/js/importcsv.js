@@ -188,9 +188,8 @@ function getAllBill() {
         }
         bills.push(bill);
     }
-    console.log(bills);
 
-    convertBillParam(bills);
+    callApi(bills);
 }
 
 function convertBillParam(arrData) {
@@ -218,8 +217,15 @@ function convertBillParam(arrData) {
             "thanh_tien_thanh_toan": data[14]
         });
     });
-    console.log(result);
     return result;
+}
+
+function callApi(bills) {
+    axios.post('/api/provinces', convertBillParam(bills)).then(function (e) {
+        alert("Nhập dữ liệu thành công.");
+    }).catch(function (e) {
+        alert("Có lỗi xảy ra.Vui lòng liên hệ admin.");
+    });
 }
 
 /***/ }),
