@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\BillService as BillService;
 use App\Helpers\Response;
+use Illuminate\Support\Facades\Input;
 
 class BillController extends Controller
 {
@@ -73,5 +74,14 @@ class BillController extends Controller
         return Response::response($data);
     }
 
+    public function reportCategoryByProduct(){
+        $billFilter = Input::get();
+        if(empty($categoryFilter)){
+            return Response::responseMissingParameter();
+        }
+        $data = $this->billService->getDataReportByCategoryProduct($billFilter);
+        if(empty($data)){
 
+        }
+    }
 }

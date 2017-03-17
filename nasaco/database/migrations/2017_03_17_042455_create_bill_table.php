@@ -16,7 +16,6 @@ class CreateBillTable extends Migration
         //
         Schema::create('bills', function (Blueprint $table) {
             $table->increments('id');
-
             $table->integer('ngay')->nullable();
             $table->integer('thang')->nullable();
             $table->integer('nam')->nullable();
@@ -24,8 +23,7 @@ class CreateBillTable extends Migration
             $table->string('mat_hang')->nullable();
             $table->string('nhom_hang')->nullable();
             $table->string('dien_giai')->nullable();
-            $table->string('tinh')->nullable();
-            $table->integer('ma_buu_chinh')->nullable();
+            $table->integer('province_id');
             $table->string('dvt')->nullable();
             $table->double('sl_dat_hang')->nullable();
             $table->double('sl_thuc_xuat')->nullable();
@@ -35,6 +33,10 @@ class CreateBillTable extends Migration
             $table->double('thanh_tien_thanh_toan')->nullable();
 
             $table->timestamps();
+        });
+
+        Schema::table('bills', function(Blueprint $table) {
+            $table->foreign('province_id')->references('id')->on('provinces');
         });
     }
 

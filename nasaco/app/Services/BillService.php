@@ -8,11 +8,14 @@
 
 namespace App\Services;
 use App\Bill;
+use App\Province;
 use Illuminate\Support\Facades\Validator;
 
 
 class BillService
 {
+    protected $fillAble = ['ngay', 'thang','nam'];
+
     public function getListProvince(){
         $province = Bill::distinct('tinh','ma_buu_chinh')
             ->select('tinh','ma_buu_chinh')
@@ -53,12 +56,54 @@ class BillService
 
     public function insert($info)
     {
+        if(!empty($info['ma_buu_chinh'])){
+            $province = Province::where('postal_code', $info['ma_buu_chinh'])->first();
+            if(!empty($province)){
+                $info['province_id'] = $province->id;
+            }
+        }
         $bill = Bill::create($info);
         return $this->transform($bill);
     }
 
+    public function getDataReportByCategoryProduct($billFilter)
+    {
+        $query = Bill::query();
+        $data = array();
+        $dataTransform = array();
+
+        foreach ($this->fillAble as $filterField) {
+            if (isset($filter[$filterField])) {
+                $filterValue = $filter[$filterField];
+                $query->where($filterField, '=', $filterValue);
+            }
+        }
+
+        if(!empty($billFilter['nhom_hang'])){
+            $query->whereIn('nhom_hang', $billFilter['nhom_hang']);
+        }
+
+        if(!empty($billFilter['tinh'])){
+            $query->whereIn('tinh', $billFilter['tinh']);
+        }
+        $query->groupBy('tinh', 'ma_buu_chinh');
+        $query->sum('sl_dat_hang');
+        $query->sum('sl_thuc_xuat');
+        $query->sum('sl_thanh_toan');
+
+        $filter['sortBy'] = isset($filter['sortBy']) ? $filter['sortBy'] : 'tinh';
+        $filter['orderDirection'] = isset($filter['orderDirection']) ? $filter['orderDirection'] : 'asc';
+
+        $query->orderBy($filter['sortBy'], $filter['orderDirection']);
+
+        $data =  $query->toSql();
+        return $data;
+    }
+
     private function transform($bill){
         if ($bill instanceof Bill) {
+            $province = Province::where('id', $bill->id)->first();
+
             return [
                 'id' => $bill->id,
                 'ngay'=>$bill->ngay,
@@ -68,8 +113,8 @@ class BillService
                 'mat_hang' => $bill->mat_hang,
                 'nhom_hang' => $bill->nhom_hang,
                 'dien_giai'=>$bill->dien_giai,
-                'tinh'=>$bill->tinh,
-                'ma_buu_chinh'=>$bill->ma_buu_chinh,
+                'tinh'=>(empty($province)) ? '': $province->name,
+                'ma_buu_chinh'=>(empty($province)) ? '': $province->postal_code,
                 'dvt'=>$bill->dvt,
                 'sl_dat_hang'=>$bill->sl_dat_hang,
                 'sl_thuc_xuat'=>$bill->sl_thuc_xuat,

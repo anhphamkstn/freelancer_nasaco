@@ -10,6 +10,7 @@ class Bill extends Model
     protected $table = 'bills';
 
     protected $fillable = [
+        'id',
         'ngay',
         'thang',
         'nam',
@@ -17,8 +18,7 @@ class Bill extends Model
         'mat_hang',
         'nhom_hang',
         'dien_giai',
-        'tinh',
-        'ma_buu_chinh',
+        'province_id',
         'dvt',
         'sl_dat_hang',
         'sl_thuc_xuat',
