@@ -10,7 +10,7 @@ namespace App\Services;
 use App\Bill;
 use App\Province;
 use Illuminate\Support\Facades\Validator;
-
+use DB;
 
 class BillService
 {
@@ -138,7 +138,7 @@ class BillService
         }
     }
 
-    public function getDataReportByCategoryProduct($billFilter)
+    public function getDataReportByCategoryProduct($filter)
     {
         $query = Bill::query();
         $data = array();
@@ -152,9 +152,12 @@ class BillService
 
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
-        $query->whereBetween('created_at', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-
-        $data =  $query->get();
+        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.postal_code');
+        $data =  $query
+            ->groupby('bills.postal_code', 'provinces.name')
+            ->select(DB::raw('sum(bills.sl_dat_hang) as sl_dat_hang, bills.postal_code, provinces.name'))
+            ->get();
         return $data;
     }
 
