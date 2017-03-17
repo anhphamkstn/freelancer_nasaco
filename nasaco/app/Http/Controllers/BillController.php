@@ -26,6 +26,28 @@ class BillController extends Controller
         }
     }
 
+    public function categoryProductIndex(){
+        $categories = array();
+        $categories = $this->billService->getListCategoryProduct();
+        if(!empty($categories)){
+            return Response::response($categories);
+        }
+        else{
+            return Response::responseNotFound();
+        }
+    }
+
+    public function productIndex(){
+        $products = array();
+        $products = $this->billService->getListProduct();
+        if(!empty($products)){
+            return Response::response($products);
+        }
+        else{
+            return Response::responseNotFound();
+        }
+    }
+
     public function store(Request $request)
     {
         $newBills = $request->get('bills');
@@ -50,4 +72,6 @@ class BillController extends Controller
         }
         return Response::response($data);
     }
+
+
 }

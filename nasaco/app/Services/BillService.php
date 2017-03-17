@@ -20,6 +20,18 @@ class BillService
         return $province;
     }
 
+    public function getListCategoryProduct(){
+        $categoryProducts= Bill::distinct('nhom_hang')
+            ->pluck('nhom_hang');
+        return $categoryProducts;
+    }
+
+    public function getListProduct(){
+        $products= Bill::distinct('mat_hang')
+            ->pluck('mat_hang');
+        return $products;
+    }
+
     public function validateInfo($info, $action = 'insert', $id = 0)
     {
         $rules = [];
