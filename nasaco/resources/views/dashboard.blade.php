@@ -1,5 +1,12 @@
 @extends('layouts.app',['activemenuitem'=>'dashboard'])
 
+@push('styles')
+    <link rel="stylesheet" href="/tooltipster/dist/css/tooltipster.bundle.min.css" type="text/css" />
+    <link rel="stylesheet" href="/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-punk.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    
+@endpush
+
 @section('content')
     <div class="row">
         <div class="col-md-12" style="display: none;">
@@ -9,6 +16,13 @@
             <div class="box box-solid box-height-220 box-type-1">
                 <div class="box-header">
                     <h5 class="box-title">TỔNG XUẤT F1 + FA</h5>
+                </div>
+                <div class="box-body">
+                    <div style="margin: auto; width: 120px; height: 120px; margin-top: -15px; margin-bottom: -15px;">
+                        <div id="gauge-report"></div>
+                    </div>
+                    <hr style="margin-bottom: 5px;">
+                    <b style="margin: auto; font-size: 26px">12300</b>
                 </div>
             </div>
         </div>
@@ -140,7 +154,23 @@
                             <h5 class="box-title">NHÓM HÀNG</h5>
                         </div>
                         <div class="box-body">
-                            abc
+                            <table style="font-size: 26px; margin: auto;">
+                                <tr>
+                                    <td>F1</td>
+                                </tr>
+                                <tr>
+                                    <td>F2</td>
+                                </tr>
+                                <tr>
+                                    <td>FA</td>
+                                </tr>
+                                <tr>
+                                    <td>E</td>
+                                </tr>
+                                <tr>
+                                    <td>G</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -167,7 +197,9 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="box box-solid" style="width: 100%; height: 540px;"></div>
+            <div class="box box-solid" style="width: 100%; height: 540px;">
+                <div id="geochart-colors" style="width: 100%; height: 100%;"></div>
+            </div>
         </div>
         <div class="col-md-3">
             <div class="box box-solid box-height-280">
@@ -196,9 +228,18 @@
 @endsection
 
 @push('scripts')
+    <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
+    <script src="https://www.amcharts.com/lib/3/maps/js/vietnamLow.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="tooltipster/dist/js/tooltipster.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="js/DaEvent.js"></script>
+    <script src="js/DaDashboard.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
+        var isLoadGoogleChart = false;
         var dashboard = new window.Controller.Dashboard();
     </script>
 @endpush

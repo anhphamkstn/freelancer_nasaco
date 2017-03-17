@@ -15,3 +15,5 @@ mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');
 
 mix.js('resources/assets/js/dashboard.js', 'public/js');
+mix.js('resources/assets/js/share/DaEvent.js', 'public/js');
+mix.js('resources/assets/js/share/DaDashboard.js', 'public/js');
