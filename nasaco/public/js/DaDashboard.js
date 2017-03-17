@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 44);
+/******/ 	return __webpack_require__(__webpack_require__.s = 46);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -10296,213 +10296,309 @@ return jQuery;
 
 /***/ }),
 
-/***/ 11:
+/***/ 13:
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function($) {window.Controller = window.Controller || {};
+/* WEBPACK VAR INJECTION */(function($, jQuery) {window.Da = window.Da || {};
 
 (function (Controller) {
-    Controller.Dashboard = function () {
-        this.drawGauge();
-        this.drawGeoChart();
-        this.drawReportF1();
-        this.drawReportFa();
-        this.drawReport3();
-        this.drawReport4();
+
+    Controller.Widget = function (options) {
+        this.eventListener = new Controller.Event();
+        this.initContainer(options);
     };
 
-    Controller.Dashboard.prototype.drawGauge = function () {
-        var chart = new Da.GoogleGaugeChart({
-            containerElement: $('#gauge-report')[0],
-            disableTooltip: true
+    Controller.Widget.prototype.initContainer = function (options) {
+        this.containerElement = $(options.containerElement);
+        this.contentId = this.uniqId('chart');
+        this.contentElement = $('<div style="width: 100%; height: 100%;"></div>');
+        this.containerElement.html('');
+        this.containerElement.css('position', 'relative');
+        this.containerElement.append(this.contentElement);
+        this.initTooltip(options);
+        this.initEvent();
+    };
+
+    Controller.Widget.prototype.button = function (btnClass, iconClass) {
+        var btn = jQuery('<button style="margin-left: 2px; margin-right: 2px;"></button>');
+        btn.attr('type', 'button');
+        btn.attr('class', 'btn ' + btnClass);
+        btn.html('<i class="' + iconClass + '" aria-hidden="true"></i>');
+        return btn;
+    };
+
+    Controller.Widget.prototype.buttonZoom = function () {
+        var self = this;
+        var zoom = this.button('btn-primary', 'glyphicon glyphicon-fullscreen');
+        zoom.click(function () {
+            self.eventListener.execute('zoom');
         });
-        chart.options.width = 120;
-        chart.options.height = 120;
-        chart.redFrom = 75;
-        chart.redTo = 100;
-        chart.draw([['Label', 'Value'], ['Percent', 25]]);
+        return zoom;
     };
 
-    Controller.Dashboard.prototype.drawGeoChart = function () {
-        var map = AmCharts.makeChart("geochart-colors", {
-            "type": "map",
-            "theme": "light",
-            "colorSteps": 10,
+    Controller.Widget.prototype.buttonAccept = function () {
+        var self = this;
+        var accept = this.button('btn-success', 'glyphicon glyphicon-ok');
+        accept.click(function () {
+            self.eventListener.execute('accept');
+        });
+        return accept;
+    };
 
-            "dataProvider": {
-                "map": "vietnamLow",
-                "areas": [{
-                    "id": "VN-54",
-                    "value": 4447100
-                }, {
-                    "id": "VN-56",
-                    "value": 626932
-                }]
+    Controller.Widget.prototype.buttonClear = function () {
+        var self = this;
+        var clear = this.button('btn-danger', 'glyphicon glyphicon-remove');
+        clear.click(function () {
+            self.eventListener.execute('clear');
+        });
+        return clear;
+    };
+
+    Controller.Widget.prototype.initTooltip = function (options) {
+        if (options.disableTooltip) {
+            return;
+        }
+        var tooltip = jQuery('<div></div>');
+        tooltip.addClass('tooltip_templates');
+        tooltip.css('display', 'none');
+        var content = jQuery('<div></div>');
+        tooltip.append(content);
+
+        this.tooltipIcon = {};
+        this.tooltipIcon.clear = this.buttonClear();
+        this.tooltipIcon.accept = this.buttonAccept();
+        this.tooltipIcon.zoom = this.buttonZoom();
+
+        if (options.tooltipIcon) {
+            var icons = options.tooltipIcon;
+            for (var i = 0, len = icons.length; i < len; i++) {
+                content.append(this.tooltipIcon[icons[i]]);
+            }
+        } else {
+            content.append(this.tooltipIcon.zoom);
+        }
+        var id = this.uniqId('tooltip');
+        content.attr('id', id);
+        this.tooltipId = id;
+        this.tooltip = tooltip;
+
+        this.containerElement.append(this.tooltip);
+        this.containerElement.attr('data-tooltip-content', '#' + this.tooltipId);
+        this.containerElement.tooltipster({
+            animation: 'fade',
+            delay: 90,
+            theme: 'tooltipster-punk',
+            trigger: 'hover',
+            interactive: 'true',
+            side: ['top', 'bottom', 'right', 'left']
+        });
+        this.topTooltipElement = $('<div style="position: fixed;top: 10px;right: 10px; z-index: 9001"></div>');
+        this.topTooltipElement.hide();
+        this.containerElement.append(this.topTooltipElement);
+    };
+
+    Controller.Widget.prototype.uniqId = function (name) {
+        name = typeof name !== 'undefined' ? name : '';
+        return name + new Date().getTime() + Math.round(Math.random() * 1000);
+    };
+
+    Controller.Widget.prototype.initEvent = function () {
+        this.eventListener.add('zoom', this.zoom.bind(this));
+    };
+
+    Controller.Widget.prototype.zoom = function (options) {
+        if (this.containerElement.hasClass('chartZoom')) {
+            this.containerElement.removeClass('chartZoom');
+            this.topTooltipElement.html('');
+            this.topTooltipElement.hide();
+            this.containerElement.tooltipster('enable');
+        } else {
+            this.containerElement.addClass('chartZoom');
+            this.containerElement.tooltipster('disable');
+            var clear = this.buttonClear();
+            var accept = this.buttonAccept();
+            var zoom = this.buttonZoom();
+            this.topTooltipElement.append(accept, clear, zoom);
+            this.topTooltipElement.show();
+        }
+        this.draw();
+    };
+
+    Controller.GoogleChart = function (options) {
+        Controller.Widget.call(this, options);
+        var self = this;
+        self.canDraw = false;
+        self.mustDraw = false;
+        self.abc = "test";
+        this.initOptions(options);
+        if (!isLoadGoogleChart) {
+            isLoadGoogleChart = true;
+            google.charts.load('42', { 'packages': ['corechart', 'controls', 'map', 'table', 'bar', 'gauge', 'geochart'] });
+        }
+        google.charts.setOnLoadCallback(function () {
+            self.canDraw = true;
+            if (self.mustDraw) {
+                self.drawGraph(self.dataJson);
+                self.mustDraw = false;
+            }
+        });
+        jQuery(window).resize(function () {
+            if (!self.containerElement.is(":visible")) {
+                jQuery(window).off();
+            }
+            self.draw();
+        });
+    };
+    Controller.GoogleChart.prototype = Object.create(Controller.Widget.prototype);
+
+    Controller.GoogleChart.prototype.initOptions = function (options) {
+        this.options = {
+            selectionMode: 'multiple',
+            animation: {
+                duration: 200,
+                easing: 'out'
             },
-
-            "areasSettings": {
-                "autoZoom": true
-            },
-
-            "valueLegend": {
-                "right": 10,
-                "minValue": "little",
-                "maxValue": "a lot!"
-            },
-
-            "export": {
-                "enabled": true
-            }
-
-        });
-    };
-
-    Controller.Dashboard.prototype.drawReportF1 = function () {
-        var item = document.getElementById('report-f1');
-        var data = {
-            labels: ["Hà Nội", "Bắc Giang", "Tuyên Quang", "Hà Nam", "Bắc Ninh", "Thanh Hóa", "Hà Tĩnh", "Hà Nội", "Bắc Giang", "Tuyên Quang", "Hà Nam", "Bắc Ninh", "Thanh Hóa", "Hà Tĩnh"],
-            datasets: [{
-                label: "ĐẶT HÀNG",
-                backgroundColor: 'rgba(174, 231, 222, 1)',
-                data: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55, 40]
-            }, {
-                label: "THỰC XUẤT",
-                backgroundColor: 'rgba(37, 194, 185, 1)',
-                data: [59, 80, 81, 56, 55, 40, 12, 65, 59, 80, 81, 56, 55, 40]
-            }, {
-                label: "THANH TOÁN",
-                backgroundColor: 'rgba(33, 159, 147, 1)',
-                data: [65, 56, 55, 40, 24, 54, 36, 65, 59, 80, 81, 56, 55, 40]
-            }]
+            backgroundColor: { fill: 'transparent' }
         };
-        var myBarChart = new Chart(item, {
-            type: 'bar',
-            data: data,
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                },
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
     };
 
-    Controller.Dashboard.prototype.drawReportFa = function () {
-        var item = document.getElementById('report-fa');
-        var data = {
-            labels: ["Hà Nội", "Bắc Giang", "Tuyên Quang", "Hà Nam", "Bắc Ninh", "Thanh Hóa", "Hà Tĩnh", "Hà Nội", "Bắc Giang", "Tuyên Quang", "Hà Nam", "Bắc Ninh", "Thanh Hóa", "Hà Tĩnh"],
-            datasets: [{
-                label: "ĐẶT HÀNG",
-                backgroundColor: 'rgba(174, 231, 222, 1)',
-                data: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55, 40]
-            }, {
-                label: "THỰC XUẤT",
-                backgroundColor: 'rgba(37, 194, 185, 1)',
-                data: [59, 80, 81, 56, 55, 40, 12, 65, 59, 80, 81, 56, 55, 40]
-            }, {
-                label: "THANH TOÁN",
-                backgroundColor: 'rgba(33, 159, 147, 1)',
-                data: [65, 56, 55, 40, 24, 54, 36, 65, 59, 80, 81, 56, 55, 40]
-            }]
-        };
-        var myBarChart = new Chart(item, {
-            type: 'bar',
-            data: data,
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                },
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
+    Controller.GoogleChart.prototype.draw = function (data) {
+        data = data || this.dataJson;
+        if (!data) return;
+        if (this.canDraw) {
+            this.drawGraph(data);
+        } else {
+            this.mustDraw = true;
+        }
+        this.dataJson = data;
     };
 
-    Controller.Dashboard.prototype.drawReport3 = function () {
-        var item = document.getElementById('report-3');
-        var data = {
-            labels: ["Hà Nội", "Bắc Giang", "Tuyên Quang", "Hà Nam", "Bắc Ninh", "Thanh Hóa", "Hà Tĩnh"],
-            datasets: [{
-                label: "F1",
-                backgroundColor: 'rgb(18,197,167)',
-                data: [65, 59, 80, 81, 56, 55, 40]
-            }, {
-                label: "F2",
-                backgroundColor: 'rgb(132,135,140)',
-                data: [59, 80, 81, 56, 55, 40, 12]
-            }, {
-                label: "FA",
-                backgroundColor: 'rgb(245,80,114)',
-                data: [65, 56, 55, 40, 24, 54, 36]
-            }, {
-                label: "E",
-                backgroundColor: 'rgb(240,203,24)',
-                data: [65, 56, 55, 40, 24, 54, 36]
-            }, {
-                label: "G",
-                backgroundColor: 'rgb(61,69,71)',
-                data: [65, 56, 55, 40, 24, 54, 36]
-            }]
-        };
-        var myBarChart = new Chart(item, {
-            type: 'horizontalBar',
-            data: data,
-            options: {
-                scales: {
-                    xAxes: [{
-                        stacked: true
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                },
-                responsive: true,
-                maintainAspectRatio: false
+    Controller.GoogleChart.prototype.convertChartDataToGoogleData = function (chartData) {
+        if (chartData.length == 1) {
+            var len = chartData[0].length;
+            var dt = [];
+            dt.push('');
+            for (var i = 0; i < len - 1; i++) {
+                dt.push(0);
             }
-        });
+            chartData.push(dt);
+        }
+        return google.visualization.arrayToDataTable(chartData);
+    };
+    Controller.GoogleChart.prototype.constructor = Controller.GoogleChart;
+
+    // Pie Chart
+    Controller.GooglePieChart = function (options) {
+        Controller.GoogleChart.call(this, options);
+        this.options.chartArea = { 'width': '95%', 'height': '85%' };
     };
 
-    Controller.Dashboard.prototype.drawReport4 = function () {
-        var item = document.getElementById('report-4');
-        var data = {
-            labels: ["F1", "F2", "FA", "E", "G"],
-            datasets: [{
-                data: [300, 50, 100, 120, 240],
-                backgroundColor: ["rgb(18,197,167)", "rgb(132,135,140)", "rgb(245,80,114)", "rgb(240,203,24)", "rgb(61,69,71)"]
-            }]
-        };
-        var doughnut = new Chart(item, {
-            type: 'doughnut',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    position: 'right'
-                }
-            }
-        });
+    Controller.GooglePieChart.prototype = Object.create(Controller.GoogleChart.prototype);
+
+    Controller.GooglePieChart.prototype.drawGraph = function (data) {
+        var self = this;
+        this.chart = new google.visualization.PieChart(self.contentElement[0]);
+        this.data = this.convertChartDataToGoogleData(data);
+        this.chart.draw(this.data, this.options);
+        //google.visualization.events.addListener(this.chart, 'select', self.selectedChange.bind(self));
     };
-})(window.Controller);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+    Controller.GooglePieChart.prototype.constructor = Controller.GooglePieChart;
+
+    // Area Chart
+    Controller.GoogleAreaChart = function (options) {
+        Controller.GoogleChart.call(this, options);
+        this.options.chartArea = { 'width': '80%', 'height': '70%' };
+        this.options.isStacked = true;
+        this.options.legend = { position: 'top', maxLines: 2 };
+    };
+
+    Controller.GoogleAreaChart.prototype = Object.create(Controller.GoogleChart.prototype);
+
+    Controller.GoogleAreaChart.prototype.drawGraph = function (data) {
+        var self = this;
+        this.chart = new google.visualization.AreaChart(self.contentElement[0]);
+        this.data = this.convertChartDataToGoogleData(data);
+        this.chart.draw(this.data, this.options);
+        //google.visualization.events.addListener(this.chart, 'select', self.selectedChange.bind(self));
+    };
+    Controller.GoogleAreaChart.prototype.constructor = Controller.GoogleAreaChart;
+
+    // Line
+    Controller.GoogleLineChart = function (options) {
+        Controller.GoogleChart.call(this, options);
+        this.options.chartArea = { 'width': '80%', 'height': '70%' };
+        this.options.legend = { position: 'top', maxLines: 2 };
+    };
+
+    Controller.GoogleLineChart.prototype = Object.create(Controller.GoogleChart.prototype);
+
+    Controller.GoogleLineChart.prototype.drawGraph = function (data) {
+        var self = this;
+        this.chart = new google.visualization.LineChart(self.contentElement[0]);
+        this.data = this.convertChartDataToGoogleData(data);
+        this.chart.draw(this.data, this.options);
+        //google.visualization.events.addListener(this.chart, 'select', self.selectedChange.bind(self));
+    };
+    Controller.GoogleLineChart.prototype.constructor = Controller.GoogleLineChart;
+
+    // Bar chart
+    Controller.GoogleBarChart = function (options) {
+        Controller.GoogleChart.call(this, options);
+        this.options.chartArea = this.options.chartArea || { 'width': '80%', 'height': '70%' };
+        this.options.legend = { position: 'top', maxLines: 2 };
+    };
+
+    Controller.GoogleBarChart.prototype = Object.create(Controller.GoogleChart.prototype);
+
+    Controller.GoogleBarChart.prototype.drawGraph = function (data) {
+        var self = this;
+        this.chart = new google.visualization.ColumnChart(self.contentElement[0]);
+        this.data = this.convertChartDataToGoogleData(data);
+        this.chart.draw(this.data, this.options);
+        //google.visualization.events.addListener(this.chart, 'select', self.selectedChange.bind(self));
+    };
+    Controller.GoogleBarChart.prototype.constructor = Controller.GoogleBarChart;
+
+    // Gauge chart
+    Controller.GoogleGaugeChart = function (options) {
+        Controller.GoogleChart.call(this, options);
+    };
+
+    Controller.GoogleGaugeChart.prototype = Object.create(Controller.GoogleChart.prototype);
+
+    Controller.GoogleGaugeChart.prototype.drawGraph = function (data) {
+        var self = this;
+        this.chart = new google.visualization.Gauge(self.contentElement[0]);
+        this.data = this.convertChartDataToGoogleData(data);
+        this.chart.draw(this.data, this.options);
+        //google.visualization.events.addListener(this.chart, 'select', self.selectedChange.bind(self));
+    };
+    Controller.GoogleGaugeChart.prototype.constructor = Controller.GoogleGaugeChart;
+
+    // Geo chart
+    Controller.GoogleGeoChart = function (options) {
+        Controller.GoogleChart.call(this, options);
+    };
+
+    Controller.GoogleGeoChart.prototype = Object.create(Controller.GoogleChart.prototype);
+
+    Controller.GoogleGeoChart.prototype.drawGraph = function (data) {
+        var self = this;
+        this.chart = new google.visualization.GeoChart(self.contentElement[0]);
+        this.data = this.convertChartDataToGoogleData(data);
+        this.chart.draw(this.data, this.options);
+        //google.visualization.events.addListener(this.chart, 'select', self.selectedChange.bind(self));
+    };
+    Controller.GoogleGeoChart.prototype.constructor = Controller.GoogleGeoChart;
+})(Da);
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(1)))
 
 /***/ }),
 
-/***/ 44:
+/***/ 46:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(11);
+module.exports = __webpack_require__(13);
 
 
 /***/ })
