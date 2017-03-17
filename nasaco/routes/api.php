@@ -16,3 +16,19 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// get config
+
+Route::get('provinces', 'BillController@provinceIndex');
+
+Route::get('categoriesProduct', 'BillController@categoryProductIndex');
+
+Route::get('products', 'BillController@productIndex');
+
+Route::post('bills', 'BillController@store');
+
+Route::get('reports/categoryProduct', 'BillController@reportCategoryByProduct');
+
+
+
+
