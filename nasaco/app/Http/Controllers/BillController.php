@@ -42,17 +42,6 @@ class BillController extends Controller
         return Response::response($data);
     }
 
-    public function reportCategoryByProduct(){
-        $billFilter = Input::get();
-        if(empty($categoryFilter)){
-            return Response::responseMissingParameter();
-        }
-        $data = $this->billService->getDataReportByCategoryProduct($billFilter);
-        if(empty($data)){
-
-        }
-    }
-
     public function provinceIndex(){
         $provinces = array();
         $provinces = $this->billService->getListProvince();
@@ -83,6 +72,17 @@ class BillController extends Controller
         }
         else{
             return Response::responseNotFound();
+        }
+    }
+
+    public function reportCategoryByProduct(){
+        $billFilter = Input::get();
+        $data = $this->billService->getDataReportByCategoryProduct($billFilter);
+        if(empty($data)){
+                return Response::responseNotFound();
+        }
+        else{
+            return Response::response($data);
         }
     }
 }

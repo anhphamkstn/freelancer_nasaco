@@ -33,10 +33,18 @@ class BillService
     ];
 
     public function getListProvince(){
-        $province = Bill::distinct('tinh','ma_buu_chinh')
-            ->select('tinh','ma_buu_chinh')
-            ->get();
-        return $province;
+        $provinces = Province::get();
+        $provinceTransforms = array();
+        $dataTransform = null;
+        if(!empty($provinces)){
+            foreach($provinces as $province){
+                $dataTransform = $this->transformProvince($province);
+                if(!empty($dataTransform)){
+                    $provinceTransforms[] = $dataTransform;
+                }
+            }
+        }
+        return $provinceTransforms;
     }
 
     public function getListCategoryProduct(){
@@ -88,40 +96,6 @@ class BillService
         }
     }
 
-    public function getDataReportByCategoryProduct($billFilter)
-    {
-        $query = Bill::query();
-        $data = array();
-        $dataTransform = array();
-
-        foreach ($this->fillable as $filterField) {
-            if (isset($filter[$filterField])) {
-                $filterValue = $filter[$filterField];
-                $query->where($filterField, '=', $filterValue);
-            }
-        }
-
-        if(!empty($billFilter['nhom_hang'])){
-            $query->whereIn('nhom_hang', $billFilter['nhom_hang']);
-        }
-
-        if(!empty($billFilter['tinh'])){
-            $query->whereIn('tinh', $billFilter['tinh']);
-        }
-        $query->groupBy('tinh', 'ma_buu_chinh');
-        $query->sum('sl_dat_hang');
-        $query->sum('sl_thuc_xuat');
-        $query->sum('sl_thanh_toan');
-
-        $filter['sortBy'] = isset($filter['sortBy']) ? $filter['sortBy'] : 'tinh';
-        $filter['orderDirection'] = isset($filter['orderDirection']) ? $filter['orderDirection'] : 'asc';
-
-        $query->orderBy($filter['sortBy'], $filter['orderDirection']);
-
-        $data =  $query->toSql();
-        return $data;
-    }
-
     private function transform($bill){
         if ($bill instanceof Bill) {
             return [
@@ -148,6 +122,43 @@ class BillService
         else{
             return null;
         }
+    }
+
+    private function transformProvince($province){
+        if ($province instanceof Province) {
+            return [
+                'id' => $province->id,
+                "code"=>$province->code,
+                'name' => $province->name,
+                'postal_code' => $province->postal_code
+            ];
+        }
+        else{
+            return null;
+        }
+    }
+
+    public function getDataReportByCategoryProduct($billFilter)
+    {
+        $query = Bill::query();
+        $data = array();
+        $dataTransform = array();
+
+        $startTime = strtotime("-21 day");
+        $endTime = strtotime("now");
+
+        if (!empty($filter['startTime']))
+            $startTime = strtotime($filter['startTime']);
+
+        if (!empty($filter['endTime']))
+            $endTime = strtotime($filter['endTime']);
+        $query->whereBetween('created_at', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+
+        if (!empty($filter['nhom_hang']))
+            $query->whereIn('nhom_hang',);
+
+        $data =  $query->get();
+        return $data;
     }
 
 }
