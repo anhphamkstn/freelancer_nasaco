@@ -154,9 +154,6 @@ class BillService
             $endTime = strtotime($filter['endTime']);
         $query->whereBetween('created_at', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
 
-        if (!empty($filter['nhom_hang']))
-            $query->whereIn('nhom_hang',);
-
         $data =  $query->get();
         return $data;
     }
