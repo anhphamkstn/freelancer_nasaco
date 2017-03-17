@@ -14,8 +14,21 @@ use Illuminate\Support\Facades\Validator;
 
 class BillService
 {
-    protected $fillAble = ['ngay', 'thang','nam'];
-
+    protected $fillable = [
+        'ngay',
+        'thang',
+        'nam',
+        'ngay_thang_nam',
+        'mat_hang',
+        'nhom_hang',
+        'dien_giai',
+        'dvt',
+        'sl_dat_hang',
+        'sl_thuc_xuat',
+        'sl_thanh_toan',
+        'con_lai',
+        'don_gia',
+        'thanh_tien_thanh_toan'];
     public function getListProvince(){
         $province = Bill::distinct('tinh','ma_buu_chinh')
             ->select('tinh','ma_buu_chinh')
@@ -56,13 +69,21 @@ class BillService
 
     public function insert($info)
     {
+        $instance = null;
         if(!empty($info['ma_buu_chinh'])){
             $province = Province::where('postal_code', $info['ma_buu_chinh'])->first();
             if(!empty($province)){
-                $info['province_id'] = $province->id;
+                $instance['province_id'] = $province->id;
             }
         }
-        $bill = Bill::create($info);
+
+        foreach ($this->fillable as $filterField) {
+            if (isset($info[$filterField])) {
+                $value = $info[$filterField];
+                $instance[$filterField] = $value;
+            }
+        }
+        $bill = Bill::create($instance);
         return $this->transform($bill);
     }
 
