@@ -186,7 +186,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12"">
+                <div class="col-md-12">
                     <div class="box box-solid box-height-260" style="position: relative;">
                         <div class="report-title">FA</div>
                         <div class="box-body">
@@ -237,6 +237,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="js/DaEvent.js"></script>
     <script src="js/DaDashboard.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
         var isLoadGoogleChart = false;
