@@ -16,3 +16,4 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 mix.js('resources/assets/js/dashboard.js', 'public/js')
     .js('resources/assets/js/importcsv.js', 'public/js');
+

@@ -29,7 +29,9 @@
   <link rel="stylesheet" href="admin-lte/plugins/daterangepicker/daterangepicker.css">
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+
   <link rel="stylesheet" type="text/css" href="css/app.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -119,9 +121,8 @@
 
 <script src="js/xlsx.core.min.js"></script>
 
+
 @stack('scripts')
-
-
 
 </body>
 </html>

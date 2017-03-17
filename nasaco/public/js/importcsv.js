@@ -198,8 +198,9 @@ function convertBillParam(arrData) {
     };
 
     arrData.forEach(function (data) {
+
         result.bills.push({
-            "ngay_thang_nam": data[0] + "-" + data[1] + "-" + data[2],
+            "ngay_thang_nam": data[2] + "-" + data[1] + "-" + data[0],
             "ngay": data[0],
             "thang": data[1],
             "nam": data[2],
@@ -216,12 +217,13 @@ function convertBillParam(arrData) {
             "don_gia": data[13],
             "thanh_tien_thanh_toan": data[14]
         });
+        console.log(result);
     });
     return result;
 }
 
 function callApi(bills) {
-    axios.post('/api/provinces', convertBillParam(bills)).then(function (e) {
+    axios.post('/api/bills', convertBillParam(bills)).then(function (e) {
         alert("Nhập dữ liệu thành công.");
     }).catch(function (e) {
         alert("Có lỗi xảy ra.Vui lòng liên hệ admin.");
