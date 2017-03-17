@@ -156,7 +156,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12"">
+                <div class="col-md-12">
                     <div class="box box-solid box-height-260" style="position: relative;">
                         <div class="report-title">FA</div>
                         <div class="box-body">
