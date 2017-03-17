@@ -16,6 +16,32 @@ class BillController extends Controller
         $this->billService = $billService;
     }
 
+    public function store(Request $request)
+    {
+        $newBills = $request->get('bills');
+        $data = [];
+        $errorMsg = [];
+        $resultInsertBill = null;
+        if (empty($newBills)) {
+            return Response::response($data, 400, 'Data is empty.');
+        }
+        foreach ($newBills as $newBill) {
+            $validator = $this->billService->validateInfo($newBill);
+            if ($validator->fails()) {
+                $errors = $validator->errors()->all();
+                $errorMsg[] = array_merge($errorMsg, $errors);
+            }
+            $resultInsertBill = $this->billService->insert($newBill);
+            if(!empty($resultInsertBill)){
+                $data[] = $resultInsertBill;
+            }
+        }
+        if (!empty($errorMsg)) {
+            return Response::responseValidateFailed(implode(' | ', $errorMsg), $data);
+        }
+        return Response::response($data);
+    }
+
     public function provinceIndex(){
         $provinces = array();
         $provinces = $this->billService->getListProvince();
@@ -49,39 +75,14 @@ class BillController extends Controller
         }
     }
 
-    public function store(Request $request)
-    {
-        $newBills = $request->get('bills');
-        $data = [];
-        $errorMsg = [];
-        $resultInsertBill = null;
-        if (empty($newBills)) {
-            return Response::response($data, 400, 'Data is empty.');
-        }
-        foreach ($newBills as $newBill) {
-            $validator = $this->billService->validateInfo($newBill);
-            if ($validator->fails()) {
-                $errors = $validator->errors()->all();
-                $errorMsg = array_merge($errorMsg, $errors);
-                return Response::responseValidateFailed(implode(' | ', $errorMsg));
-            }
-            $resultInsertBill = $this->billService->insert($newBill);
-            $data[] = $resultInsertBill;
-        }
-        if (!empty($errorMsg)) {
-            return Response::responseValidateFailed(implode(' | ', $errorMsg), $data);
-        }
-        return Response::response($data);
-    }
-
     public function reportCategoryByProduct(){
         $billFilter = Input::get();
-        if(empty($categoryFilter)){
-            return Response::responseMissingParameter();
-        }
         $data = $this->billService->getDataReportByCategoryProduct($billFilter);
         if(empty($data)){
-
+                return Response::responseNotFound();
+        }
+        else{
+            return Response::response($data);
         }
     }
 }
