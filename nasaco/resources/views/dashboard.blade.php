@@ -9,7 +9,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12" style="display: none;">
+        <div class="col-md-12" >
             @include('dashboard.time-picker')
         </div>
         <div class="col-md-3">
@@ -239,8 +239,24 @@
     <script src="js/DaDashboard.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="js/dashboard.js"></script>
+    
+    <script>
+        $(function () {
+            $('#datetimepicker6').datetimepicker();
+            $('#datetimepicker7').datetimepicker({
+                useCurrent: false //Important! See issue #1075
+            });
+            $("#datetimepicker6").on("dp.change", function (e) {
+                $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+            });
+            $("#datetimepicker7").on("dp.change", function (e) {
+                $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+            });
+        });
+    </script>
     <script>
         var isLoadGoogleChart = false;
         var dashboard = new window.Controller.Dashboard();
     </script>
+    
 @endpush

@@ -18,3 +18,4 @@ mix.js('resources/assets/js/dashboard.js', 'public/js');
 mix.js('resources/assets/js/share/DaEvent.js', 'public/js');
 mix.js('resources/assets/js/share/DaDashboard.js', 'public/js');
 mix.js('resources/assets/js/importcsv.js', 'public/js');
+

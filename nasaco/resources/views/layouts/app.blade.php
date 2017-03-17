@@ -23,14 +23,16 @@
   <link rel="stylesheet" href="admin-lte/plugins/morris/morris.css">
   <!-- jvectormap -->
   <link rel="stylesheet" href="admin-lte/plugins/jvectormap/jquery-jvectormap-1.2.2.css">
-  <!-- Date Picker -->
-  <link rel="stylesheet" href="admin-lte/plugins/datepicker/datepicker3.css">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="admin-lte/plugins/daterangepicker/daterangepicker.css">
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+
   <link rel="stylesheet" type="text/css" href="css/app.css">
+
+  
+
   @stack('styles')
+
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -92,6 +94,7 @@
   $.widget.bridge('uibutton', $.ui.button);
 </script>
 <!-- Bootstrap 3.3.6 -->
+<script src="js/moment.js"></script>
 <script src="admin-lte/bootstrap/js/bootstrap.min.js"></script>
 <!-- Morris.js charts -->
 <script src="js/raphael.min.js"></script>
@@ -103,11 +106,11 @@
 <script src="admin-lte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
 <!-- jQuery Knob Chart -->
 <script src="admin-lte/plugins/knob/jquery.knob.js"></script>
-<!-- daterangepicker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-<script src="admin-lte/plugins/daterangepicker/daterangepicker.js"></script>
-<!-- datepicker -->
-<script src="admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+
+<script type="text/javascript" src="js/transition.js"></script>
+<script type="text/javascript" src="js/collapse.js"></script>
+<script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
+
 <!-- Bootstrap WYSIHTML5 -->
 <script src="admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <!-- Slimscroll -->
@@ -119,9 +122,8 @@
 
 <script src="js/xlsx.core.min.js"></script>
 
+
 @stack('scripts')
-
-
 
 </body>
 </html>

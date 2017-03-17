@@ -5,27 +5,34 @@
     </div>
     <div class="box-body">
         <div class="row">
-            <div class="col-md-12">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
+            <div class='col-md-5'>
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepicker6'>
+                        <input type='text' class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
                     </div>
-                    <input type="text" name="daterange" class="form-control pull-right" id="reservation"
-                    value="01/01/2015">
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
+            <div class='col-md-5'>
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepicker7'>
+                        <input type='text' class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
                     </div>
-                    <input type="text" name="daterange" class="form-control pull-right" id="reservation"
-                    value="01/01/2015">
                 </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-2">
                 <button class="btn btn-primary pull-right">Lọc</button>
             </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+
+    
+@endpush
