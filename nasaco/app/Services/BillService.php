@@ -28,7 +28,10 @@ class BillService
         'sl_thanh_toan',
         'con_lai',
         'don_gia',
-        'thanh_tien_thanh_toan'];
+        'thanh_tien_thanh_toan',
+        'postal_code'
+    ];
+
     public function getListProvince(){
         $province = Bill::distinct('tinh','ma_buu_chinh')
             ->select('tinh','ma_buu_chinh')
@@ -69,22 +72,20 @@ class BillService
 
     public function insert($info)
     {
-        $instance = null;
-        if(!empty($info['ma_buu_chinh'])){
-            $province = Province::where('postal_code', $info['ma_buu_chinh'])->first();
-            if(!empty($province)){
-                $instance['province_id'] = $province->id;
+        try{
+            $instance = null;
+            foreach ($this->fillable as $filterField) {
+                if (isset($info[$filterField])) {
+                    $value = $info[$filterField];
+                    $instance[$filterField] = $value;
+                }
             }
+            $bill = Bill::create($instance);
+            return $this->transform($bill);
         }
-
-        foreach ($this->fillable as $filterField) {
-            if (isset($info[$filterField])) {
-                $value = $info[$filterField];
-                $instance[$filterField] = $value;
-            }
+        catch(\Exception $e){
+            return null;
         }
-        $bill = Bill::create($instance);
-        return $this->transform($bill);
     }
 
     public function getDataReportByCategoryProduct($billFilter)
@@ -93,7 +94,7 @@ class BillService
         $data = array();
         $dataTransform = array();
 
-        foreach ($this->fillAble as $filterField) {
+        foreach ($this->fillable as $filterField) {
             if (isset($filter[$filterField])) {
                 $filterValue = $filter[$filterField];
                 $query->where($filterField, '=', $filterValue);
@@ -123,8 +124,6 @@ class BillService
 
     private function transform($bill){
         if ($bill instanceof Bill) {
-            $province = Province::where('id', $bill->id)->first();
-
             return [
                 'id' => $bill->id,
                 'ngay'=>$bill->ngay,
@@ -134,8 +133,7 @@ class BillService
                 'mat_hang' => $bill->mat_hang,
                 'nhom_hang' => $bill->nhom_hang,
                 'dien_giai'=>$bill->dien_giai,
-                'tinh'=>(empty($province)) ? '': $province->name,
-                'ma_buu_chinh'=>(empty($province)) ? '': $province->postal_code,
+                'ma_buu_chinh'=>$bill->postal_code,
                 'dvt'=>$bill->dvt,
                 'sl_dat_hang'=>$bill->sl_dat_hang,
                 'sl_thuc_xuat'=>$bill->sl_thuc_xuat,
