@@ -20,6 +20,9 @@
         </div>
         <div class="col-md-3">
             <div class="box box-solid box-height-220 box-type-1">
+                <div class="overlay display-none" id="loading-1">
+                    @include('dashboard.loading')
+                </div>
                 <div class="box-header">
                     <h5 class="box-title">TỔNG XUẤT F1 + FA</h5>
                 </div>
@@ -34,6 +37,9 @@
         </div>
         <div class="col-md-3">
             <div class="box box-solid box-height-220">
+                <div class="overlay display-none" id="loading-2">
+                    @include('dashboard.loading')
+                </div>
                 <div class="box-body">
                     <table  class="table table-type-1">
                         <thead>
@@ -52,6 +58,9 @@
         </div>
         <div class="col-md-2">
             <div class="box box-solid box-height-220">
+                <div class="overlay display-none" id="loading-3">
+                    @include('dashboard.loading')
+                </div>
                 <div class="box-body">
                     <table  class="table table-type-1">
                         <thead>
@@ -69,6 +78,9 @@
         </div>
         <div class="col-md-4">
             <div class="box box-solid box-height-220">
+                <div class="overlay display-none" id="loading-4">
+                    @include('dashboard.loading')
+                </div>
                 <div class="box-body">
                     <table class="table table-type-1">
                         <thead>
@@ -96,6 +108,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="box box-solid box-height-260 box-type-1">
+                        <div class="overlay display-none" id="loading-5">
+                            @include('dashboard.loading')
+                        </div>
                         <div class="box-header">
                             <h5 class="box-title">TỈNH THÀNH</h5>
                         </div>
@@ -138,6 +153,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="box box-solid box-height-260" style="position: relative;">
+                        <div class="overlay display-none" id="loading-6">
+                            @include('dashboard.loading')
+                        </div>
                         <div class="report-title">F1</div>
                         <div class="box-body">
                             <canvas id="report-f1" width="400" height="260" style="width: 100%; height: 260px;"></canvas>
@@ -146,6 +164,9 @@
                 </div>
                 <div class="col-md-12">
                     <div class="box box-solid box-height-260" style="position: relative;">
+                        <div class="overlay display-none" id="loading-8">
+                            @include('dashboard.loading')
+                        </div>
                         <div class="report-title">FA</div>
                         <div class="box-body">
                             <canvas id="report-fa" width="400" height="260" style="width: 100%; height: 260px;"></canvas>
@@ -156,29 +177,41 @@
         </div>
         <div class="col-md-3">
             <div class="box box-solid" style="width: 100%; height: 540px;">
+                <div class="overlay display-none" id="loading-7">
+                    @include('dashboard.loading')
+                </div>
                 <div id="geochart-colors" style="width: 100%; height: 100%;"></div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="box box-solid box-height-280">
+                
                 <div class="box-body">
                     <img src="img/img.jpg" alt="logo" style="width: 100%; height: 260px;">
                 </div>
             </div>
         </div>
-        <div class="col-md-5"">
+        <div class="col-md-5">
             <div class="box box-solid box-height-280" style="position: relative;">
-                <div class="report-title">Report 3</div>
-                <div class="box-body">
-                    <canvas id="report-3" width="400" height="260" style="width: 100%; height: 260px;"></canvas>
+                <div class="overlay display-none" id="loading-9">
+                    @include('dashboard.loading')
+                </div>
+                <div class="report-title">Cơ cấu hàng theo tỉnh</div>
+                <div class="box-body" style="height:260px; overflow-y : scroll">
+                    <canvas id="report-3" width="400" height="560" style="margin-top:20px;width: 100% ;height:560px"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-md-4"">
+        <div class="col-md-4">
             <div class="box box-solid box-height-280" style="position: relative;">
-                <div class="report-title">Report 4</div>
+                <div class="overlay" id="loading-10">
+                    @include('dashboard.loading')
+                </div>
+                <div class="report-title">Cơ cấu hàng theo nhóm</div>
                 <div class="box-body">
-                    <canvas id="report-4" width="400" height="260" style="width: 100%; height: 260px;"></canvas>
+                    <div style="width:100%;padding:30px 0px">
+                        <canvas id="report-4" width="270" height="180" style="width: 270px; height: 180px;"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -203,7 +236,7 @@
     <script>
         window.Controller = window.Controller || {};
         var controller = window.Controller;
-        controller.DateFilter = { startTime: moment().format('YYYY-MM-DD'), endTime: moment().format('YYYY-MM-DD') };
+        controller.DateFilter = { startTime: moment().subtract(3, 'years').format('YYYY-MM-DD'), endTime: moment().format('YYYY-MM-DD') };
         $(function () {
             
             $('#date-range-picker').daterangepicker({
@@ -230,7 +263,7 @@
                     ]
                 },
                 "alwaysShowCalendars": true,
-                "startDate": moment().subtract(7, 'days'),
+                "startDate": moment().subtract(3, 'years'),
                 "endDate": moment(),
                 "opens": "left"
             }, function(start, end, label) {

@@ -115,7 +115,7 @@ window.Controller = window.Controller || {};
     }
 
     Controller.Dashboard.prototype.getDateTimeFilter = function() {
-        var result = { startTime: moment(), endTime: moment() };
+        var result = { startTime: moment().subtract(3, 'years'), endTime: moment() };
         if (Controller.DateFilter) result = Controller.DateFilter;
         return result;
     }
@@ -123,6 +123,7 @@ window.Controller = window.Controller || {};
     Controller.Dashboard.prototype.callApiXuatNhapTon = function() {
         var me = this;
         var timeRange = this.getDateTimeFilter();
+        $("#loading-4").css("display", "block");
         axios.get('/api/baoCao/xuatNhapTon', {
                 params: {
                     startTime: timeRange.startTime,
@@ -130,6 +131,7 @@ window.Controller = window.Controller || {};
                 }
             })
             .then(function(response) {
+                $("#loading-4").css("display", "none");
                 me.filltable(response.data);
             }).catch(function(e) {
                 console.log(e);
@@ -157,6 +159,10 @@ window.Controller = window.Controller || {};
     Controller.Dashboard.prototype.callApiTongSuatThanhToan = function() {
         var me = this;
         var timeRange = this.getDateTimeFilter();
+
+        $("#loading-1").css("display", "block");
+        $("#loading-3").css("display", "block");
+
         axios.get('/api/baoCao/tongSuatThanhToanTheoNhomHang', {
                 params: {
                     startTime: timeRange.startTime,
@@ -165,6 +171,9 @@ window.Controller = window.Controller || {};
             })
             .then(function(response) {
                 me.drawGauge(response.data);
+                $("#loading-1").css("display", "none");
+                $("#loading-3").css("display", "none");
+
             }).catch(function(e) {
                 console.log(e);
                 alert("Có lỗi xảy ra.Vui lòng liên hệ admin.")
@@ -174,6 +183,12 @@ window.Controller = window.Controller || {};
     Controller.Dashboard.prototype.callApiListProvince = function() {
         var me = this;
         var timeRange = this.getDateTimeFilter();
+        $("#loading-2").css("display", "block");
+        $("#loading-5").css("display", "block");
+        $("#loading-6").css("display", "block");
+        $("#loading-7").css("display", "block");
+        $("#loading-8").css("display", "block");
+        $("#loading-9").css("display", "block");
         axios.get('/api/baoCao/thongKeTheoTinh', {
                 params: {
                     startTime: timeRange.startTime,
@@ -183,6 +198,12 @@ window.Controller = window.Controller || {};
             .then(function(response) {
                 me.fillListProvice(response.data);
                 me.drawReportF1(response.data);
+                $("#loading-6").css("display", "none");
+                $("#loading-2").css("display", "none");
+                $("#loading-5").css("display", "none");
+                $("#loading-7").css("display", "none");
+                $("#loading-8").css("display", "none");
+                $("#loading-9").css("display", "none");
                 me.drawReportFa(response.data);
                 me.drawReport3(response.data);
                 me.drawGeoChart(response.data);
@@ -205,6 +226,7 @@ window.Controller = window.Controller || {};
     Controller.Dashboard.prototype.callApithongKeTheoNhomHang = function() {
         var me = this;
         var timeRange = this.getDateTimeFilter();
+        $("#loading-10").css("display", "block");
         axios.get('/api/baoCao/thongKeTheoNhomHang', {
                 params: {
                     startTime: timeRange.startTime,
@@ -212,6 +234,7 @@ window.Controller = window.Controller || {};
                 }
             })
             .then(function(response) {
+                $("#loading-10").css("display", "none");
                 me.drawReport4(response.data);
             }).catch(function(e) {
                 console.log(e);
@@ -424,7 +447,7 @@ window.Controller = window.Controller || {};
                     }]
                 },
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: true
             }
         });
     }
