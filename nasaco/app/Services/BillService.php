@@ -326,7 +326,6 @@ class BillService
      */
     public function baoCaoThongKeTheoTinh($filter){
         $query = Bill::query();
-        $data = array();
         $dataTransforms = array();
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
@@ -344,25 +343,42 @@ class BillService
             }
         }
         else{
-            $nhom_hang = ['F1','F1','FA','E','G'];
+            $nhom_hang = ['F1','F2','FA','E','G'];
             $query->whereIn('nhom_hang',$nhom_hang);
         }
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
-        $data =  $query
-            ->groupby('bills.ma_buu_chinh','provinces.name','bills.nhom_hang')
-            ->select(DB::raw('sum(bills.sl_thuc_xuat) as soLuongXuat, sum(bills.sl_dat_hang) as soLuongDathang, bills.ma_buu_chinh as maBuuChinh, provinces.name,bills.nhom_hang as nhomHang'))
-            ->get();
+        $tinhThanhCoDatHang =  $query->distinct('ma_buu_chinh')
+            ->pluck('ma_buu_chinh');
+        $data = null;
+        foreach($tinhThanhCoDatHang as $tinh){
+            $data['tinh'] = $tinh;
+            $nhomHang = ProductCategory::get();
 
-        // transform data
-        foreach($data as $item){
-            if(empty($item->soLuongXuat)){
-                $item->soLuongXuat = 0;
+            $dataTheoNhom = array();
+            if(!empty($nhomHang)){
+                $dataTransform = null;
+                foreach ($nhomHang as $item){
+                    $dataTransform['nhomHang'] = $item->name;
+                    $soLuongThucXuat = 0;
+                    $soLuongThanhToan = 0;
+                    $soLuongDathang = 0;
+                    $bills = Bill::where('nhom_hang', $item->name)
+                        ->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)))
+                        ->where('ma_buu_chinh',$tinh)
+                        ->get();
+                    foreach ($bills as $bill){
+                        $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
+                        $soLuongThanhToan = $soLuongThanhToan + $bill->sl_thanh_toan;
+                        $soLuongDathang = $soLuongDathang + $bill->sl_dat_hang;
+                    }
+                    $dataTransform['soLuongThucXuat'] = $soLuongThucXuat;
+                    $dataTransform['soLuongThanhToan'] = $soLuongThanhToan;
+                    $dataTransform['soLuongDatHang'] = $soLuongDathang;
+                    $dataTheoNhom[] = $dataTransform;
+                }
             }
-            if(empty($item->soLuongDathang)){
-                $item->soLuongDathang = 0;
-            }
-            $dataTransforms[] = $item;
+            $data['dataTheoNhom'] = $dataTheoNhom;
+            $dataTransforms[] = $data;
         }
         return $dataTransforms;
     }
