@@ -182,7 +182,6 @@ class BillService
     {
         $query = Bill::query();
         $data = array();
-        $dataTransform = array();
 
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
@@ -209,7 +208,6 @@ class BillService
     public function baocaoTongSuatThanhToanTheoNhomHang($filter){
         $query = Bill::query();
         $data = array();
-        $dataTransform = array();
 
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
@@ -239,14 +237,15 @@ class BillService
         return $data;
     }
 
-
-
-
-    public function baocaoTongSuatTheoNhom($filter)
+    /**
+     * @param $filter
+     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     * bao cao so luong xuat theo nhom hang, hien tai mac dinh tinh cho F1, FA
+     */
+    public function baoCaoTongSuatTheoNhom($filter)
     {
         $query = Bill::query();
         $data = array();
-        $dataTransform = array();
 
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
@@ -270,108 +269,131 @@ class BillService
 
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
         $data =  $query
-            ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat'))
+            ->select(DB::raw('sum(bills.sl_thuc_xuat) as soLuongThucXuat'))
             ->get();
         return $data;
     }
 
-
-
-
-    public function baocaoXuatNhapTon($filter){
+    /**
+     * @param $filter
+     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     * bao cao xuat nhap ton theo tinh thanh va nhom hang
+     */
+    public function baoCaoXuatNhapTon($filter){
         $query = Bill::query();
         $data = array();
-        $dataTransform = array();
 
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
-        $nhom_hang = array();
         if (!empty($filter['startTime']))
             $startTime = strtotime($filter['startTime']);
 
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
-
-        if (!empty($filter['nhom_hang']))
-            $nhom_hang = $filter['nhom_hang'];
+        if (!empty($filter['nhomHang'])) {
+            if ($filter['nhomHang'] != 'all') {
+                $inputTrimSpace = str_replace(' ', '', $filter['nhomHang']);
+                $filterValueArray = explode(',', $inputTrimSpace);
+                $query->whereIn('nhom_hang', $filterValueArray);
+            }
+        }
         else{
             $nhom_hang = ['F1','F1','FA','E','G'];
+            $query->whereIn('nhom_hang',$nhom_hang);
         }
 
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-        $query->whereIn('nhom_hang',$nhom_hang);
         $data =  $query
             ->groupby('nhom_hang')
-            ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat, sum(bills.sl_dat_hang) as sl_dat_hang, bills.nhom_hang, (sum(bills.sl_dat_hang) - sum(bills.sl_thuc_xuat)) as sl_ton'))
+            ->select(DB::raw('sum(bills.sl_thuc_xuat) as soLuongXuat, sum(bills.sl_dat_hang) as soLuongDathang, bills.nhom_hang, (sum(bills.sl_dat_hang) - sum(bills.sl_thuc_xuat)) as soLuongTon'))
             ->get();
         return $data;
     }
 
-    public function baocaothongKeTheoTinh($filter){
+    /**
+     * @param $filter
+     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     * bao cao thong ke theo tinh thanh so luong xuat, nhap
+     */
+    public function baoCaoThongKeTheoTinh($filter){
         $query = Bill::query();
         $data = array();
-        $dataTransform = array();
 
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
-        $nhom_hang = array();
         if (!empty($filter['startTime']))
             $startTime = strtotime($filter['startTime']);
 
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
 
-        if (!empty($filter['nhom_hang']))
-            $nhom_hang = $filter['nhom_hang'];
+        if (!empty($filter['nhomHang'])) {
+            if ($filter['nhomHang'] != 'all') {
+                $inputTrimSpace = str_replace(' ', '', $filter['nhomHang']);
+                $filterValueArray = explode(',', $inputTrimSpace);
+                $query->whereIn('nhom_hang', $filterValueArray);
+            }
+        }
         else{
             $nhom_hang = ['F1','F1','FA','E','G'];
+            $query->whereIn('nhom_hang',$nhom_hang);
         }
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-        $query->whereIn('nhom_hang',$nhom_hang);
-        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.postal_code');
+        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
         $data =  $query
-            ->groupby('bills.postal_code','provinces.name','bills.nhom_hang')
-            ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat, sum(bills.sl_dat_hang) as sl_dat_hang, bills.postal_code, provinces.name,bills.nhom_hang'))
+            ->groupby('bills.ma_buu_chinh','provinces.name','bills.nhom_hang')
+            ->select(DB::raw('sum(bills.sl_thuc_xuat) as soLuongXuat, sum(bills.sl_dat_hang) as soLuongDathang, bills.ma_buu_chinh as maBuuChinh, provinces.name,bills.nhom_hang as nhomHang'))
             ->get();
         return $data;
     }
-    public function baocaoThongKeTheoNhomHang($filter){
+
+    /**
+     * @param $filter
+     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     * bao cao thong ke so luong xuat, dat hang theo tung nhom hang
+     */
+    public function baoCaoThongKeTheoNhomHang($filter){
         $query = Bill::query();
         $data = array();
-        $dataTransform = array();
 
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
-        $nhom_hang = array();
         if (!empty($filter['startTime']))
             $startTime = strtotime($filter['startTime']);
 
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
 
-        if (!empty($filter['nhom_hang']))
-            $nhom_hang = $filter['nhom_hang'];
+        if (!empty($filter['nhomHang'])) {
+            if ($filter['nhomHang'] != 'all') {
+                $inputTrimSpace = str_replace(' ', '', $filter['nhomHang']);
+                $filterValueArray = explode(',', $inputTrimSpace);
+                $query->whereIn('nhom_hang', $filterValueArray);
+            }
+        }
         else{
             $nhom_hang = ['F1','F1','FA','E','G'];
+            $query->whereIn('nhom_hang',$nhom_hang);
         }
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-        $query->whereIn('nhom_hang',$nhom_hang);
         $data =  $query
             ->groupby('bills.nhom_hang')
-            ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat, sum(bills.sl_dat_hang) as sl_dat_hang, sum(bills.sl_thanh_toan) as sl_thanh_toan, bills.nhom_hang'))
+            ->select(DB::raw('sum(bills.sl_thuc_xuat) as soLuongXuat, sum(bills.sl_dat_hang) as soLuongDatHang, sum(bills.sl_thanh_toan) as soLuongThanhToan, bills.nhom_hang as nhomHang'))
             ->get();
         return $data;
     }
 
-
-    public function baocaoDanhSachTinhThanhCoDatHang($filter){
+    /**
+     * @param $filter
+     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     * lay danh sach tinh thanh co dat hang
+     */
+    public function baoCaoDanhSachTinhThanhCoDatHang($filter){
         $query = Bill::query();
         $data = array();
-        $dataTransform = array();
 
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
-        $nhom_hang = array();
         if (!empty($filter['startTime']))
             $startTime = strtotime($filter['startTime']);
 
@@ -379,24 +401,26 @@ class BillService
             $endTime = strtotime($filter['endTime']);
 
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-        $query->whereIn('nhom_hang',$nhom_hang);
-        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.postal_code');
+        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
         $data =  $query
-            ->distinct('bills.postal_code', 'provinces.name','provinces.code')
+            ->distinct('bills.ma_buu_chinh', 'provinces.name','provinces.code')
             ->where('bills.sl_dat_hang', '>', 0)
+            ->select('bills.ma_buu_chinh', 'provinces.name','provinces.code')
             ->get();
         return $data;
     }
 
-
-    public function baocaoDanhSachTinhThanhCoXuatHang($filter){
+    /**
+     * @param $filter
+     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     * lay danh sach tinh thanh co xuat hang
+     */
+    public function baoCaoDanhSachTinhThanhCoXuatHang($filter){
         $query = Bill::query();
         $data = array();
-        $dataTransform = array();
 
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
-        $nhom_hang = array();
         if (!empty($filter['startTime']))
             $startTime = strtotime($filter['startTime']);
 
@@ -404,11 +428,11 @@ class BillService
             $endTime = strtotime($filter['endTime']);
 
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-        $query->whereIn('nhom_hang',$nhom_hang);
-        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.postal_code');
+        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
         $data =  $query
-            ->distinct('bills.postal_code', 'provinces.name','provinces.code')
+            ->distinct('bills.ma_buu_chinh', 'provinces.name','provinces.code')
             ->where('bills.sl_thuc_xuat', '>', 0)
+            ->select('bills.ma_buu_chinh', 'provinces.name','provinces.code')
             ->get();
         return $data;
     }

@@ -17,19 +17,17 @@ Route::get('baoCao/soLuongDatHangTheoTinhThanhTrenTungNhomHang', 'BillController
 
 Route::get('baoCao/tongSuatThanhToanTheoNhomHang', 'BillController@baocaoTongSuatThanhToanTheoNhomHang');
 
-Route::get('baocao/tongSuatTheoF1FA', 'BillController@baocaoTongSuatTheoF1FA');
+Route::get('baoCao/tongSuatTheoF1FA', 'BillController@baoCaoTongSuatTheoF1FA');
 
+Route::get('baoCao/xuatNhapTon', 'BillController@baoCaoXuatNhapTon');
 
+Route::get('baoCao/thongKeTheoTinh', 'BillController@baoCaoThongKeTheoTinh');
 
-Route::get('baocao/xuatNhapTon', 'BillController@baocaoXuatNhapTon');
+Route::get('baoCao/thongKeTheoNhomHang', 'BillController@baoCaoThongKeTheoNhomHang');
 
-Route::get('baocao/thongKeTheoTinh', 'BillController@baocaothongKeTheoTinh');
+Route::get('baoCao/danhSachTinhThanhCoDatHang', 'BillController@baoCaoDanhSachTinhThanhCoDatHang');
 
-Route::get('baocao/thongKeTheoNhomHang', 'BillController@baocaoThongKeTheoNhomHang');
-
-Route::get('baocao/danhSachTinhThanhCoDatHang', 'BillController@baocaoDanhSachTinhThanhCoDatHang');
-
-Route::get('baocao/danhSachTinhThanhCoXuatHang', 'BillController@baocaoDanhSachTinhThanhCoXuatHang');
+Route::get('baoCao/danhSachTinhThanhCoXuatHang', 'BillController@baoCaoDanhSachTinhThanhCoXuatHang');
 // endregion
 
 

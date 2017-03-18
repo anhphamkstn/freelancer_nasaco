@@ -123,12 +123,13 @@ class BillController extends Controller
         }
     }
 
-
-
-
-    public function baocaoTongSuatTheoF1FA(){
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * bao cao tong xuat theo hai nhom hang la F1, FA
+     */
+    public function baoCaoTongSuatTheoF1FA(){
         $filter = Input::get();
-        $data = $this->billService->baocaoTongSuatTheoNhom($filter);
+        $data = $this->billService->baoCaoTongSuatTheoNhom($filter);
         if(empty($data)){
             return Response::responseNotFound();
         }
@@ -137,11 +138,13 @@ class BillController extends Controller
         }
     }
 
-
-
-    public function baocaoXuatNhapTon(){
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * bao cao xuat, nhap ton theo tung nhom hang
+     */
+    public function baoCaoXuatNhapTon(){
         $filter = Input::get();
-        $data = $this->billService->baocaoXuatNhapTon($filter);
+        $data = $this->billService->baoCaoXuatNhapTon($filter);
         if(empty($data)){
             return Response::responseNotFound();
         }
@@ -150,9 +153,13 @@ class BillController extends Controller
         }
     }
 
-    public function baocaothongKeTheoTinh(){
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * bao cao thong ke theo tinh
+     */
+    public function baoCaoThongKeTheoTinh(){
         $filter = Input::get();
-        $data = $this->billService->baocaothongKeTheoTinh($filter);
+        $data = $this->billService->baoCaoThongKeTheoTinh($filter);
         if(empty($data)){
             return Response::responseNotFound();
         }
@@ -161,9 +168,13 @@ class BillController extends Controller
         }
     }
 
-    public function baocaoThongKeTheoNhomHang(){
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * bao cao thong ke so luong nhap xuat theo nhom hang
+     */
+    public function baoCaoThongKeTheoNhomHang(){
         $filter = Input::get();
-        $data = $this->billService->baocaoThongKeTheoNhomHang($filter);
+        $data = $this->billService->baoCaoThongKeTheoNhomHang($filter);
         if(empty($data)){
             return Response::responseNotFound();
         }
@@ -172,9 +183,13 @@ class BillController extends Controller
         }
     }
 
-    public function baocaoDanhSachTinhThanhCoDatHang(){
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * danh sach tinh thanh co dat hang
+     */
+    public function baoCaoDanhSachTinhThanhCoDatHang(){
         $filter = Input::get();
-        $data = $this->billService->baocaoDanhSachTinhThanhCoDatHang($filter);
+        $data = $this->billService->baoCaoDanhSachTinhThanhCoDatHang($filter);
         if(empty($data)){
             return Response::responseNotFound();
         }
@@ -183,9 +198,9 @@ class BillController extends Controller
         }
     }
 
-    public function baocaoDanhSachTinhThanhCoXuatHang(){
+    public function baoCaoDanhSachTinhThanhCoXuatHang(){
         $filter = Input::get();
-        $data = $this->billService->baocaoDanhSachTinhThanhCoXuatHang($filter);
+        $data = $this->billService->baoCaoDanhSachTinhThanhCoXuatHang($filter);
         if(empty($data)){
             return Response::responseNotFound();
         }
