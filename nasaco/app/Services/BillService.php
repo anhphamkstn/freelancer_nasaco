@@ -29,7 +29,7 @@ class BillService
         'con_lai',
         'don_gia',
         'thanh_tien_thanh_toan',
-        'postal_code'
+        'ma_buu_chinh'
     ];
 
     public function getListProvince(){
@@ -107,7 +107,7 @@ class BillService
                 'matHang' => $bill->mat_hang,
                 'nhomHang' => $bill->nhom_hang,
                 'dienGiai'=>$bill->dien_giai,
-                'maBuuChinh'=>$bill->postal_code,
+                'maBuuChinh'=>$bill->ma_buu_chinh,
                 'donViTinh'=>$bill->dvt,
                 'soLuongDatHang'=>$bill->sl_dat_hang,
                 'soLuongThucXuat'=>$bill->sl_thuc_xuat,
@@ -130,7 +130,7 @@ class BillService
                 'id' => $province->id,
                 "code"=>$province->code,
                 'name' => $province->name,
-                'postal_code' => $province->postal_code
+                'postalCode' => $province->postal_code
             ];
         }
         else{

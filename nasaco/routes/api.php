@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 // get config
+Route::post('bills', 'BillController@store');
 
 Route::get('provinces', 'BillController@provinceIndex');
 
@@ -25,7 +26,6 @@ Route::get('categoriesProduct', 'BillController@categoryProductIndex');
 
 Route::get('products', 'BillController@productIndex');
 
-Route::post('bills', 'BillController@store');
 
 Route::get('reports/categoryProduct', 'BillController@reportCategoryByProduct');
 

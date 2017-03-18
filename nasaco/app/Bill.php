@@ -18,7 +18,7 @@ class Bill extends Model
         'mat_hang',
         'nhom_hang',
         'dien_giai',
-        'postal_code',
+        'ma_buu_chinh',
         'dvt',
         'sl_dat_hang',
         'sl_thuc_xuat',

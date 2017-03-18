@@ -23,7 +23,7 @@ class CreateBillTable extends Migration
             $table->string('mat_hang')->nullable();
             $table->string('nhom_hang')->nullable();
             $table->string('dien_giai')->nullable();
-            $table->string('postal_code')->nullable();
+            $table->string('ma_buu_chinh')->nullable();
             $table->string('dvt')->nullable();
             $table->double('sl_dat_hang')->nullable();
             $table->double('sl_thuc_xuat')->nullable();
