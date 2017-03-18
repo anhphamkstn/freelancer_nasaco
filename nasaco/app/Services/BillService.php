@@ -223,16 +223,18 @@ class BillService
         if(!empty($data)){
             $dataTransform = null;
             foreach ($data as $item){
-                $dataTransform = Bill::where('nhom_hang', $item->name)
-                    ->groupBy('nhom_hang')
+                $dataTransform['nhomHang'] = $item->name;
+                $soLuongThucXuat = 0;
+                $soLuongThanhToan = 0;
+                $bills = Bill::where('nhom_hang', $item->name)
                     ->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)))
-                    ->select(DB::raw('sum(bills.sl_thuc_xuat) as soLuongThucXuat, sum(bills.sl_thanh_toan) as soLuongThanhToan, bills.nhom_hang as nhomHang'))
-                    ->get()->first();
-                if(empty($dataTransform)){
-                    $dataTransform['nhomHang'] = $item->name;
-                    $dataTransform['soLuongThucXuat'] = 0;
-                    $dataTransform['soLuongThanhToan'] = 0;
+                    ->get();
+                foreach ($bills as $bill){
+                    $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
+                    $soLuongThanhToan = $soLuongThanhToan + $bill->sl_thanh_toan;
                 }
+                $dataTransform['soLuongThucXuat'] = $soLuongThucXuat;
+                $dataTransform['soLuongThanhToan'] = $soLuongThanhToan;
                 $dataTransforms[] = $dataTransform;
             }
         }
