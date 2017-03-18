@@ -28,14 +28,14 @@
                         <div id="gauge-report"></div>
                     </div>
                     <hr style="margin-bottom: 5px;">
-                    <b id="tong_xuat_f1_fa" style="margin: auto; font-size: 26px">12300</b>
+                    <b id="tong_xuat_f1_fa" style="margin: auto; font-size: 26px"></b>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="box box-solid box-height-220">
                 <div class="box-body">
-                    <table class="table table-type-1">
+                    <table  class="table table-type-1">
                         <thead>
                             <tr>
                                 <th></th>
@@ -44,25 +44,7 @@
                                 <th>FA</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>TỔNG XUẤT</td>
-                                <td>13.907</td>
-                                <td>10.901</td>
-                                <td>360</td>
-                            </tr>
-                            <tr>
-                                <td>THANH TOÁN</td>
-                                <td>6.907</td>
-                                <td>0</td>
-                                <td>200</td>
-                            </tr>
-                            <tr>
-                                <td>CÒN LẠI</td>
-                                <td>7000</td>
-                                <td></td>
-                                <td>100</td>
-                            </tr>
+                        <tbody id="table_1">
                         </tbody>
                     </table>
                 </div>
@@ -71,7 +53,7 @@
         <div class="col-md-2">
             <div class="box box-solid box-height-220">
                 <div class="box-body">
-                    <table class="table table-type-1">
+                    <table  class="table table-type-1">
                         <thead>
                             <tr>
                                 <th></th>
@@ -79,22 +61,7 @@
                                 <th>G</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td>6.972</td>
-                                <td>358</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>6020</td>
-                                <td>58</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>752</td>
-                                <td>300</td>
-                            </tr>
+                        <tbody id="table_2">
                         </tbody>
                     </table>
                 </div>
@@ -118,25 +85,8 @@
                                 <td>BAO CAO SU</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>TỔNG NHẬP</td>
-                                <td>6.972</td>
-                                <td>358</td>
-                                <td>6.972</td>
-                            </tr>
-                            <tr>
-                                <td>TỔNG XUẤT</td>
-                                <td>6020</td>
-                                <td>58</td>
-                                <td>697</td>
-                            </tr>
-                            <tr>
-                                <td>TỒN</td>
-                                <td>752</td>
-                                <td>300</td>
-                                <td>752</td>
-                            </tr>
+                        <tbody id="table_3">
+                            
                         </tbody>
                     </table>
                 </div>
@@ -149,8 +99,10 @@
                         <div class="box-header">
                             <h5 class="box-title">TỈNH THÀNH</h5>
                         </div>
-                        <div class="box-body">
-                            abc
+                        <div class="box-body " style="height: 200px;overflow-y: scroll;">
+                            <table  id="list-provice" style="font-size: 26px; margin: 5px auto;">
+                                
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -249,6 +201,9 @@
     <script src="js/dashboard.js"></script>
     
     <script>
+        window.Controller = window.Controller || {};
+        var controller = window.Controller;
+        controller.DateFilter = { startTime: moment().format('YYYY-MM-DD'), endTime: moment().format('YYYY-MM-DD') };
         $(function () {
             
             $('#date-range-picker').daterangepicker({
@@ -275,17 +230,24 @@
                     ]
                 },
                 "alwaysShowCalendars": true,
-                "startDate": moment(),
-                "endDate": moment().subtract(7, 'days'),
+                "startDate": moment().subtract(7, 'days'),
+                "endDate": moment(),
                 "opens": "left"
             }, function(start, end, label) {
-                console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
-            });
+                controller.DateFilter.startTime = start.format('YYYY-MM-DD');
+                controller.DateFilter.endTime = end.format('YYYY-MM-DD');
+            })
         });
     </script>
     <script>
         var isLoadGoogleChart = false;
         var dashboard = new window.Controller.Dashboard();
+        $( document ).ready(function() {
+            $('#change_daterange').click(function () {
+                dashboard.getData();
+            });
+        });
+        
     </script>
     
 @endpush

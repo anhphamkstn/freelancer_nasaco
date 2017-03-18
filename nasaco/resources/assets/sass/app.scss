@@ -1,43 +1,46 @@
 // Variables
 @import "variables";
-
-
-
 .table-type-1 {
-	width: 100%;
-	color: rgb(33,156,151);
+    width: 100%;
+    color: rgb(33, 156, 151);
 }
 
 .table-type-1 th {
-	font-size: 24px;
+    font-size: 24px;
 }
 
 .box-height-220 {
-	height: 220px;
+    height: 220px;
 }
 
 .box-height-260 {
-	height: 260px;
+    height: 260px;
 }
 
 .box-height-280 {
-	height: 280px;
+    height: 280px;
 }
 
 .box-type-1 {
-	background-color: rgb(136,158,179);
-	color: white!important;
-	text-align: center;
+    background-color: rgb(136, 158, 179);
+    color: white!important;
+    text-align: center;
 }
 
 .box-type-1 .box-title {
-	color: white!important;
+    color: white!important;
 }
 
 .report-title {
-	position: absolute;
-	font-size: 20px;
-	top: 5px;
-	left: 15px;
-	color: rgb(33,156,151);
+    position: absolute;
+    font-size: 20px;
+    top: 5px;
+    left: 15px;
+    color: rgb(33, 156, 151);
+}
+
+#date-range-picker {
+    padding: 6px;
+    margin-right: 10px;
+    border-radius: 4px;
 }
