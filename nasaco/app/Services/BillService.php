@@ -327,7 +327,7 @@ class BillService
     public function baoCaoThongKeTheoTinh($filter){
         $query = Bill::query();
         $data = array();
-
+        $dataTransforms = array();
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
         if (!empty($filter['startTime']))
@@ -353,7 +353,18 @@ class BillService
             ->groupby('bills.ma_buu_chinh','provinces.name','bills.nhom_hang')
             ->select(DB::raw('sum(bills.sl_thuc_xuat) as soLuongXuat, sum(bills.sl_dat_hang) as soLuongDathang, bills.ma_buu_chinh as maBuuChinh, provinces.name,bills.nhom_hang as nhomHang'))
             ->get();
-        return $data;
+
+        // transform data
+        foreach($data as $item){
+            if(empty($item->soLuongXuat)){
+                $item->soLuongXuat = 0;
+            }
+            if(empty($item->soLuongDathang)){
+                $item->soLuongDathang = 0;
+            }
+            $dataTransforms[] = $item;
+        }
+        return $dataTransforms;
     }
 
     /**
