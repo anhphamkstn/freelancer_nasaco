@@ -284,34 +284,39 @@ class BillService
      * bao cao xuat nhap ton theo tinh thanh va nhom hang
      */
     public function baoCaoXuatNhapTon($filter){
-        $query = Bill::query();
+        $query = ProductCategory::query();
         $data = array();
-
+        $dataTransforms = array();
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
+
         if (!empty($filter['startTime']))
             $startTime = strtotime($filter['startTime']);
 
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
-        if (!empty($filter['nhomHang'])) {
-            if ($filter['nhomHang'] != 'all') {
-                $inputTrimSpace = str_replace(' ', '', $filter['nhomHang']);
-                $filterValueArray = explode(',', $inputTrimSpace);
-                $query->whereIn('nhom_hang', $filterValueArray);
+
+        $data = $query->get();
+        if(!empty($data)){
+            $dataTransform = null;
+            foreach ($data as $item){
+                $dataTransform['nhomHang'] = $item->name;
+                $soLuongThucXuat = 0;
+                $soLuongDathang = 0;
+                $bills = Bill::where('nhom_hang', $item->name)
+                    ->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)))
+                    ->get();
+                foreach ($bills as $bill){
+                    $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
+                    $soLuongDathang = $soLuongDathang + $bill->sl_dat_hang;
+                }
+                $dataTransform['soLuongThucXuat'] = $soLuongThucXuat;
+                $dataTransform['soLuongDatHang'] = $soLuongDathang;
+                $dataTransform['soLuongTon'] = $soLuongDathang - $soLuongThucXuat;
+                $dataTransforms[] = $dataTransform;
             }
         }
-        else{
-            $nhom_hang = ['F1','F1','FA','E','G'];
-            $query->whereIn('nhom_hang',$nhom_hang);
-        }
-
-        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-        $data =  $query
-            ->groupby('nhom_hang')
-            ->select(DB::raw('sum(bills.sl_thuc_xuat) as soLuongXuat, sum(bills.sl_dat_hang) as soLuongDathang, bills.nhom_hang, (sum(bills.sl_dat_hang) - sum(bills.sl_thuc_xuat)) as soLuongTon'))
-            ->get();
-        return $data;
+        return $dataTransforms;
     }
 
     /**
