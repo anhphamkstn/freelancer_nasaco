@@ -10303,15 +10303,16 @@ return jQuery;
 
 (function (Controller) {
     Controller.Dashboard = function () {
-        this.drawGauge();
-        this.drawGeoChart();
-        this.drawReportF1();
-        this.drawReportFa();
-        this.drawReport3();
-        this.drawReport4();
+        this.getData();
+        // this.drawGauge();
+        // this.drawGeoChart();
+        // this.drawReportF1();
+        // this.drawReportFa();
+        // this.drawReport3();
+        // this.drawReport4();
     };
 
-    Controller.Dashboard.prototype.drawGauge = function () {
+    Controller.Dashboard.prototype.drawGauge = function (value, percent) {
         var chart = new Da.GoogleGaugeChart({
             containerElement: $('#gauge-report')[0],
             disableTooltip: true
@@ -10320,8 +10321,32 @@ return jQuery;
         chart.options.height = 120;
         chart.redFrom = 75;
         chart.redTo = 100;
-        chart.draw([['Label', 'Value'], ['Percent', 25]]);
+        chart.draw([['Label', 'Value'], ['Percent', percent]]);
+        $('#tong_xuat_f1_fa').html(value);
     };
+
+    Controller.Dashboard.prototype.getData = function () {
+        callApiTongSuatThanhToan();
+    };
+
+    function getDateTimeFilter() {
+        var result = {};
+    }
+
+    function callApiTongSuatThanhToan() {
+        var timeRange = getDateTimeFilter();
+        axios.get('/api/baoCao/tongSuatThanhToanTheoNhomHang', {
+            params: {
+                startTime: timeRange.startTime,
+                endTime: timeRange.endTime
+            }
+        }).then(function (response) {
+            alert("Nhập dữ liệu thành công.");
+        }).catch(function (e) {
+            console.log(e);
+            alert("Có lỗi xảy ra.Vui lòng liên hệ admin.");
+        });
+    }
 
     Controller.Dashboard.prototype.drawGeoChart = function () {
         var map = AmCharts.makeChart("geochart-colors", {

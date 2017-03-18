@@ -5,28 +5,9 @@
     </div>
     <div class="box-body">
         <div class="row">
-            <div class='col-md-5'>
-                <div class="form-group">
-                    <div class='input-group date' id='datetimepicker6'>
-                        <input type='text' class="form-control" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class='col-md-5'>
-                <div class="form-group">
-                    <div class='input-group date' id='datetimepicker7'>
-                        <input type='text' class="form-control" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-primary pull-right">Lọc</button>
+            <div class='col-md-12'>
+                <button id="change_daterange" class="btn btn-primary pull-right">Lọc</button>
+                <input class="pull-right"  name="daterange" id="date-range-picker" type="text" value="" />
             </div>
         </div>
     </div>

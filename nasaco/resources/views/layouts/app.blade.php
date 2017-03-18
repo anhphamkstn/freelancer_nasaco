@@ -32,7 +32,6 @@
 
   @stack('styles')
 
-  <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -94,7 +93,8 @@
   $.widget.bridge('uibutton', $.ui.button);
 </script>
 <!-- Bootstrap 3.3.6 -->
-<script src="js/moment.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
 <script src="admin-lte/bootstrap/js/bootstrap.min.js"></script>
 <!-- Morris.js charts -->
 <script src="js/raphael.min.js"></script>
@@ -107,10 +107,6 @@
 <!-- jQuery Knob Chart -->
 <script src="admin-lte/plugins/knob/jquery.knob.js"></script>
 
-<script type="text/javascript" src="js/transition.js"></script>
-<script type="text/javascript" src="js/collapse.js"></script>
-<script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
-
 <!-- Bootstrap WYSIHTML5 -->
 <script src="admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <!-- Slimscroll -->
@@ -122,6 +118,8 @@
 
 <script src="js/xlsx.core.min.js"></script>
 
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
 @stack('scripts')
 

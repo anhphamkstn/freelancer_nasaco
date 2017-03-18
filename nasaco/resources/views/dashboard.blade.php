@@ -8,7 +8,12 @@
 @endpush
 
 @section('content')
-
+    <div style="display:none" id="loading-dashboard" class="overlay">
+        <div class='uil-default-css' style='transform:scale(0.53);margin:auto;height: 50px;'>
+            <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(0deg) translate(0,-60px);transform:rotate(0deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(30deg) translate(0,-60px);transform:rotate(30deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(60deg) translate(0,-60px);transform:rotate(60deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(90deg) translate(0,-60px);transform:rotate(90deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(120deg) translate(0,-60px);transform:rotate(120deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(150deg) translate(0,-60px);transform:rotate(150deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(180deg) translate(0,-60px);transform:rotate(180deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(210deg) translate(0,-60px);transform:rotate(210deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(240deg) translate(0,-60px);transform:rotate(240deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(270deg) translate(0,-60px);transform:rotate(270deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(300deg) translate(0,-60px);transform:rotate(300deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(330deg) translate(0,-60px);transform:rotate(330deg) translate(0,-60px);border-radius:10px;position:absolute;'>
+            </div>
+        </div>
+    </div>    
     <div class="row">
         <div class="col-md-12" >
             @include('dashboard.time-picker')
@@ -23,7 +28,7 @@
                         <div id="gauge-report"></div>
                     </div>
                     <hr style="margin-bottom: 5px;">
-                    <b style="margin: auto; font-size: 26px">12300</b>
+                    <b id="tong_xuat_f1_fa" style="margin: auto; font-size: 26px">12300</b>
                 </div>
             </div>
         </div>
@@ -226,7 +231,9 @@
             </div>
         </div>
     </div>
+    
 @endsection
+
 
 @push('scripts')
     <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
@@ -243,15 +250,36 @@
     
     <script>
         $(function () {
-            $('#datetimepicker6').datetimepicker();
-            $('#datetimepicker7').datetimepicker({
-                useCurrent: false //Important! See issue #1075
-            });
-            $("#datetimepicker6").on("dp.change", function (e) {
-                $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-            });
-            $("#datetimepicker7").on("dp.change", function (e) {
-                $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+            
+            $('#date-range-picker').daterangepicker({
+                "ranges": {
+                    "Hôm nay": [
+                        moment(),
+                        moment()
+                    ],
+                    "Hôm qua": [
+                        moment().subtract(1, 'days'),
+                        moment().subtract(1, 'days')
+                    ],
+                    "Bảy ngày trước": [
+                        moment().subtract(7, 'days'),
+                        moment()
+                    ],
+                    "Tháng": [
+                        moment().startOf('month'),
+                         moment()
+                    ],
+                    "Quý": [
+                        moment().startOf('quarter').fromNow(),
+                        moment()
+                    ]
+                },
+                "alwaysShowCalendars": true,
+                "startDate": moment(),
+                "endDate": moment().subtract(7, 'days'),
+                "opens": "left"
+            }, function(start, end, label) {
+                console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
             });
         });
     </script>

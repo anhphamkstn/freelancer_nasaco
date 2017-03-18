@@ -10446,7 +10446,6 @@ function convertBillParam(arrData) {
             "don_gia": data[13],
             "thanh_tien_thanh_toan": data[14]
         });
-        console.log(result);
     });
     return result;
 }
