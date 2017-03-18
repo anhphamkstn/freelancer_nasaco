@@ -161,4 +161,33 @@ class BillService
         return $data;
     }
 
+    public function baocaoTongSuatTheoNhom($filter)
+    {
+        $query = Bill::query();
+        $data = array();
+        $dataTransform = array();
+
+        $startTime = strtotime("-21 day");
+        $endTime = strtotime("now");
+        $nhom_hang = array();
+        if (!empty($filter['startTime']))
+            $startTime = strtotime($filter['startTime']);
+
+        if (!empty($filter['endTime']))
+            $endTime = strtotime($filter['endTime']);
+
+        if (!empty($filter['nhom_hang']))
+            $nhom_hang = $filter['nhom_hang'];
+        else{
+            $nhom_hang = ['F1','FA'];
+        }
+
+        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->whereIn('nhom_hang',$nhom_hang);
+        $data =  $query
+            ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat'))
+            ->get();
+        return $data;
+    }
+
 }

@@ -29,6 +29,9 @@ Route::post('bills', 'BillController@store');
 
 Route::get('reports/categoryProduct', 'BillController@reportCategoryByProduct');
 
+Route::get('baocao/tongSuatTheoF1FA', 'BillController@baocaoTongSuatTheoF1FA');
+
+
 
 
 

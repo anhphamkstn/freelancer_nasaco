@@ -85,4 +85,16 @@ class BillController extends Controller
             return Response::response($data);
         }
     }
+
+    // return tong suat theo hai nhom hang la F1 va FA theo khoang thoi gian
+    public function baocaoTongSuatTheoF1FA(){
+        $filter = Input::get();
+        $data = $this->billService->baocaoTongSuatTheoNhom($filter);
+        if(empty($data)){
+            return Response::responseNotFound();
+        }
+        else{
+            return Response::response($data);
+        }
+    }
 }
