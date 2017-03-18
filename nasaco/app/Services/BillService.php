@@ -364,7 +364,7 @@ class BillService
     public function baoCaoThongKeTheoNhomHang($filter){
         $query = Bill::query();
         $data = array();
-
+        $dataTransforms = array();
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
         if (!empty($filter['startTime']))
@@ -381,7 +381,7 @@ class BillService
             }
         }
         else{
-            $nhom_hang = ['F1','F1','FA','E','G'];
+            $nhom_hang = ['F1','F2','FA','E','G'];
             $query->whereIn('nhom_hang',$nhom_hang);
         }
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
@@ -389,7 +389,20 @@ class BillService
             ->groupby('bills.nhom_hang')
             ->select(DB::raw('sum(bills.sl_thuc_xuat) as soLuongXuat, sum(bills.sl_dat_hang) as soLuongDatHang, sum(bills.sl_thanh_toan) as soLuongThanhToan, bills.nhom_hang as nhomHang'))
             ->get();
-        return $data;
+        // transform data
+        foreach($data as $item){
+            if(empty($item->soLuongThanhToan)){
+                $item->soLuongThanhToan = 0;
+            }
+            if(empty($item->soLuongXuat)){
+                $item->soLuongXuat = 0;
+            }
+            if(!empty($item->soLuongDatHang)){
+                $item->soLuongDatHang = 0;
+            }
+            $dataTransforms[] = $item;
+        }
+        return $dataTransforms;
     }
 
     /**
