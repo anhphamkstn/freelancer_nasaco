@@ -350,10 +350,10 @@ class BillService
         $tinhThanhCoDatHang =  $query->distinct('ma_buu_chinh')
             ->pluck('ma_buu_chinh');
         $data = null;
+        $bills = Bill::whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)))->get();
         foreach($tinhThanhCoDatHang as $tinh){
             $data['tinh'] = $tinh;
             $nhomHang = ProductCategory::get();
-
             $dataTheoNhom = array();
             if(!empty($nhomHang)){
                 $dataTransform = null;
@@ -362,14 +362,12 @@ class BillService
                     $soLuongThucXuat = 0;
                     $soLuongThanhToan = 0;
                     $soLuongDathang = 0;
-                    $bills = Bill::where('nhom_hang', $item->name)
-                        ->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)))
-                        ->where('ma_buu_chinh',$tinh)
-                        ->get();
                     foreach ($bills as $bill){
-                        $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
-                        $soLuongThanhToan = $soLuongThanhToan + $bill->sl_thanh_toan;
-                        $soLuongDathang = $soLuongDathang + $bill->sl_dat_hang;
+                        if($bill->ma_buu_chinh == $tinh && $bill->nhom_hang == $item->name){
+                            $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
+                            $soLuongThanhToan = $soLuongThanhToan + $bill->sl_thanh_toan;
+                            $soLuongDathang = $soLuongDathang + $bill->sl_dat_hang;
+                        }
                     }
                     $dataTransform['soLuongThucXuat'] = $soLuongThucXuat;
                     $dataTransform['soLuongThanhToan'] = $soLuongThanhToan;
