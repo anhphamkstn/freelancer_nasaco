@@ -197,17 +197,6 @@ class BillController extends Controller
             return Response::response($data);
         }
     }
-
-    public function baoCaoDanhSachTinhThanhCoXuatHang(){
-        $filter = Input::get();
-        $data = $this->billService->baoCaoDanhSachTinhThanhCoXuatHang($filter);
-        if(empty($data)){
-            return Response::responseNotFound();
-        }
-        else{
-            return Response::response($data);
-        }
-    }
     // endregion
 
 }

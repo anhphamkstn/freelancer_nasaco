@@ -195,8 +195,8 @@ class BillService
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
         $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
         $data =  $query
-            ->groupby('bills.ma_buu_chinh', 'provinces.name')
-            ->select(DB::raw('sum(bills.sl_dat_hang) as soLuongDatHang, bills.ma_buu_chinh as maBuuChinh, provinces.name'))
+            ->groupby('bills.ma_buu_chinh', 'provinces.name','bills.nhom_hang')
+            ->select(DB::raw('sum(bills.sl_dat_hang) as soLuongDatHang, bills.ma_buu_chinh as maBuuChinh, provinces.name, bills.nhom_hang as nhomHang'))
             ->get();
         return $data;
     }
@@ -413,34 +413,6 @@ class BillService
         $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
         $data =  $query
             ->distinct('bills.ma_buu_chinh', 'provinces.name','provinces.code')
-            ->where('bills.sl_dat_hang', '>', 0)
-            ->select('bills.ma_buu_chinh', 'provinces.name','provinces.code')
-            ->get();
-        return $data;
-    }
-
-    /**
-     * @param $filter
-     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
-     * lay danh sach tinh thanh co xuat hang
-     */
-    public function baoCaoDanhSachTinhThanhCoXuatHang($filter){
-        $query = Bill::query();
-        $data = array();
-
-        $startTime = strtotime("-30 day");
-        $endTime = strtotime("now");
-        if (!empty($filter['startTime']))
-            $startTime = strtotime($filter['startTime']);
-
-        if (!empty($filter['endTime']))
-            $endTime = strtotime($filter['endTime']);
-
-        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
-        $data =  $query
-            ->distinct('bills.ma_buu_chinh', 'provinces.name','provinces.code')
-            ->where('bills.sl_thuc_xuat', '>', 0)
             ->select('bills.ma_buu_chinh', 'provinces.name','provinces.code')
             ->get();
         return $data;

@@ -27,7 +27,6 @@ Route::get('baoCao/thongKeTheoNhomHang', 'BillController@baoCaoThongKeTheoNhomHa
 
 Route::get('baoCao/danhSachTinhThanhCoDatHang', 'BillController@baoCaoDanhSachTinhThanhCoDatHang');
 
-Route::get('baoCao/danhSachTinhThanhCoXuatHang', 'BillController@baoCaoDanhSachTinhThanhCoXuatHang');
 // endregion
 
 
