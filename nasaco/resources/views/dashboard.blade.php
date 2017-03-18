@@ -4,10 +4,11 @@
     <link rel="stylesheet" href="/tooltipster/dist/css/tooltipster.bundle.min.css" type="text/css" />
     <link rel="stylesheet" href="/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-punk.min.css" type="text/css" />
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
-    
+    <link rel="stylesheet" href="css/default.css" type="text/css"></link>
 @endpush
 
 @section('content')
+
     <div class="row">
         <div class="col-md-12" >
             @include('dashboard.time-picker')

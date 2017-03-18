@@ -2,7 +2,7 @@
   "/js/app.js": "/js/app.js",
   "/css/app.css": "/css/app.css",
   "/js/DaDashboard.js": "/js/DaDashboard.js",
+  "/js/importcsv.js": "/js/importcsv.js",
   "/js/dashboard.js": "/js/dashboard.js",
-  "/js/DaEvent.js": "/js/DaEvent.js",
-  "/js/importcsv.js": "/js/importcsv.js"
+  "/js/DaEvent.js": "/js/DaEvent.js"
 }
