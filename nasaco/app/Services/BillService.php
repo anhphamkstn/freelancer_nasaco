@@ -103,20 +103,20 @@ class BillService
                 'ngay'=>$bill->ngay,
                 'thang'=>$bill->thang,
                 'nam'=>$bill->nam,
-                "ngay_thang_nam"=>$bill->ngay_thang_nam,
-                'mat_hang' => $bill->mat_hang,
-                'nhom_hang' => $bill->nhom_hang,
-                'dien_giai'=>$bill->dien_giai,
-                'ma_buu_chinh'=>$bill->postal_code,
-                'dvt'=>$bill->dvt,
-                'sl_dat_hang'=>$bill->sl_dat_hang,
-                'sl_thuc_xuat'=>$bill->sl_thuc_xuat,
-                'sl_thanh_toan'=>$bill->sl_thanh_toan,
-                'con_lai'=>$bill->con_lai,
-                'don_gia'=>$bill->don_gia,
-                'thanh_tien_thanh_toan'=>$bill->thanh_tien_thanh_toan,
-                'created_at' => $bill->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $bill->updated_at->format('Y-m-d H:i:s')
+                "ngayThangNam"=>$bill->ngay_thang_nam,
+                'matHang' => $bill->mat_hang,
+                'nhomHang' => $bill->nhom_hang,
+                'dienGiai'=>$bill->dien_giai,
+                'maBuuChinh'=>$bill->postal_code,
+                'donViTinh'=>$bill->dvt,
+                'soLuongDatHang'=>$bill->sl_dat_hang,
+                'soLuongThucXuat'=>$bill->sl_thuc_xuat,
+                'soLuongThanhToan'=>$bill->sl_thanh_toan,
+                'conLai'=>$bill->con_lai,
+                'donGia'=>$bill->don_gia,
+                'thanhTienThanhToan'=>$bill->thanh_tien_thanh_toan,
+                'createdAt' => $bill->created_at->format('Y-m-d H:i:s'),
+                'updatedAt' => $bill->updated_at->format('Y-m-d H:i:s')
             ];
         }
         else{
@@ -169,21 +169,25 @@ class BillService
 
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
-        $nhom_hang = array();
         if (!empty($filter['startTime']))
             $startTime = strtotime($filter['startTime']);
 
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
 
-        if (!empty($filter['nhom_hang']))
-            $nhom_hang = $filter['nhom_hang'];
+        if (!empty($filter['nhomHang'])) {
+            if ($filter['nhomHang'] != 'all') {
+                $inputTrimSpace = str_replace(' ', '', $filter['nhomHang']);
+                $filterValueArray = explode(',', $inputTrimSpace);
+                $query->whereIn('nhom_hang', $filterValueArray);
+            }
+        }
         else{
             $nhom_hang = ['F1','FA'];
+            $query->whereIn('nhom_hang',$nhom_hang);
         }
 
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-        $query->whereIn('nhom_hang',$nhom_hang);
         $data =  $query
             ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat'))
             ->get();
