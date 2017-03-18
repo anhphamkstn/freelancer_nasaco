@@ -97,4 +97,70 @@ class BillController extends Controller
             return Response::response($data);
         }
     }
+
+    public function baocaoTongsuatThanhToanTheoNhomHang(){
+        $filter = Input::get();
+        $data = $this->billService->baocaoTongsuatThanhToanTheoNhomHang($filter);
+        if(empty($data)){
+            return Response::responseNotFound();
+        }
+        else{
+            return Response::response($data);
+        }
+    }
+
+    public function baocaoXuatNhapTon(){
+        $filter = Input::get();
+        $data = $this->billService->baocaoXuatNhapTon($filter);
+        if(empty($data)){
+            return Response::responseNotFound();
+        }
+        else{
+            return Response::response($data);
+        }
+    }
+
+    public function baocaothongKeTheoTinh(){
+        $filter = Input::get();
+        $data = $this->billService->baocaothongKeTheoTinh($filter);
+        if(empty($data)){
+            return Response::responseNotFound();
+        }
+        else{
+            return Response::response($data);
+        }
+    }
+
+    public function baocaoThongKeTheoNhomHang(){
+        $filter = Input::get();
+        $data = $this->billService->baocaoThongKeTheoNhomHang($filter);
+        if(empty($data)){
+            return Response::responseNotFound();
+        }
+        else{
+            return Response::response($data);
+        }
+    }
+
+    public function baocaoDanhSachTinhThanhCoDatHang(){
+        $filter = Input::get();
+        $data = $this->billService->baocaoDanhSachTinhThanhCoDatHang($filter);
+        if(empty($data)){
+            return Response::responseNotFound();
+        }
+        else{
+            return Response::response($data);
+        }
+    }
+
+    public function baocaoDanhSachTinhThanhCoXuatHang(){
+        $filter = Input::get();
+        $data = $this->billService->baocaoDanhSachTinhThanhCoXuatHang($filter);
+        if(empty($data)){
+            return Response::responseNotFound();
+        }
+        else{
+            return Response::response($data);
+        }
+    }
 }

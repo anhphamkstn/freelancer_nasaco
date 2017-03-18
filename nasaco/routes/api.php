@@ -31,6 +31,17 @@ Route::get('reports/categoryProduct', 'BillController@reportCategoryByProduct');
 
 Route::get('baocao/tongSuatTheoF1FA', 'BillController@baocaoTongSuatTheoF1FA');
 
+Route::get('baocao/tongsuatThanhToanTheoNhomHang', 'BillController@baocaoTongsuatThanhToanTheoNhomHang');
+
+Route::get('baocao/xuatNhapTon', 'BillController@baocaoXuatNhapTon');
+
+Route::get('baocao/thongKeTheoTinh', 'BillController@baocaothongKeTheoTinh');
+
+Route::get('baocao/thongKeTheoNhomHang', 'BillController@baocaoThongKeTheoNhomHang');
+
+Route::get('baocao/danhSachTinhThanhCoDatHang', 'BillController@baocaoDanhSachTinhThanhCoDatHang');
+
+Route::get('baocao/danhSachTinhThanhCoXuatHang', 'BillController@baocaoDanhSachTinhThanhCoXuatHang');
 
 
 
