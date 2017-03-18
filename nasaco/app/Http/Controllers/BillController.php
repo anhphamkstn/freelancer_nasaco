@@ -10,12 +10,23 @@ use Illuminate\Support\Facades\Input;
 class BillController extends Controller
 {
     protected  $billService;
-    //
+
+    /**
+     * BillController constructor.
+     * @param BillService $billService
+     * Ham constructor
+     */
     public function __construct(BillService $billService)
     {
         $this->billService = $billService;
     }
 
+    // region /** Danh muc & du lieu **/
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * Ham them moi bill voi tham so la mang bill, ke qua tra ve la mang bill
+     */
     public function store(Request $request)
     {
         $newBills = $request->get('bills');
@@ -42,6 +53,21 @@ class BillController extends Controller
         return Response::response($data);
     }
 
+    public function layDanhMucNhomHang(){
+        $nhomHang = array();
+        $nhomHang = $this->billService->layDanhMucNhomHang();
+        if(!empty($nhomHang)){
+            return Response::response($nhomHang);
+        }
+        else{
+            return Response::responseNotFound();
+        }
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * Ham lay danh sach  province trong bang province
+     */
     public function provinceIndex(){
         $provinces = array();
         $provinces = $this->billService->getListProvince();
@@ -53,40 +79,53 @@ class BillController extends Controller
         }
     }
 
-    public function categoryProductIndex(){
-        $categories = array();
-        $categories = $this->billService->getListCategoryProduct();
-        if(!empty($categories)){
-            return Response::response($categories);
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * Lay danh muc mat hang da luu
+     */
+    public function layDanhMucMatHang(){
+        $danhMucMatHang = array();
+        $danhMucMatHang = $this->billService->layDanhMucMatHang();
+        if(!empty($danhMucMatHang)){
+            return Response::response($danhMucMatHang);
         }
         else{
             return Response::responseNotFound();
         }
     }
+    // endregion
 
-    public function productIndex(){
-        $products = array();
-        $products = $this->billService->getListProduct();
-        if(!empty($products)){
-            return Response::response($products);
-        }
-        else{
-            return Response::responseNotFound();
-        }
-    }
+    // region /** Bao cao */
 
-    public function reportCategoryByProduct(){
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * bao cao so luong dat hang the tung tinh thanh tren tung nhom hang
+     */
+    public function baoCaoSoLuongDatHangTheoTinhThanhTrenTungNhomHang(){
         $billFilter = Input::get();
-        $data = $this->billService->getDataReportByCategoryProduct($billFilter);
+        $data = $this->billService->baoCaoSoLuongDatHangTheoTinhThanhTrenTungNhomHang($billFilter);
         if(empty($data)){
-                return Response::responseNotFound();
+            return Response::responseNotFound();
+        }
+        else{
+            return Response::response($data);
+        }
+    }
+    // bao cao tong suat thanh toan thoe tung nhom hang
+    public function baocaoTongSuatThanhToanTheoNhomHang(){
+        $filter = Input::get();
+        $data = $this->billService->baocaoTongSuatThanhToanTheoNhomHang($filter);
+        if(empty($data)){
+            return Response::responseNotFound();
         }
         else{
             return Response::response($data);
         }
     }
 
-    // return tong suat theo hai nhom hang la F1 va FA theo khoang thoi gian
+
+
+
     public function baocaoTongSuatTheoF1FA(){
         $filter = Input::get();
         $data = $this->billService->baocaoTongSuatTheoNhom($filter);
@@ -98,16 +137,7 @@ class BillController extends Controller
         }
     }
 
-    public function baocaoTongsuatThanhToanTheoNhomHang(){
-        $filter = Input::get();
-        $data = $this->billService->baocaoTongsuatThanhToanTheoNhomHang($filter);
-        if(empty($data)){
-            return Response::responseNotFound();
-        }
-        else{
-            return Response::response($data);
-        }
-    }
+
 
     public function baocaoXuatNhapTon(){
         $filter = Input::get();
@@ -163,4 +193,6 @@ class BillController extends Controller
             return Response::response($data);
         }
     }
+    // endregion
+
 }

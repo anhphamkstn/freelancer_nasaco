@@ -2,36 +2,24 @@
 
 use Illuminate\Http\Request;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-// get config
+// region -----1. Bill & danh muc
 Route::post('bills', 'BillController@store');
 
 Route::get('provinces', 'BillController@provinceIndex');
 
-Route::get('categoriesProduct', 'BillController@categoryProductIndex');
+Route::get('danhMucNhomHang', 'BillController@layDanhMucNhomHang');
 
-Route::get('products', 'BillController@productIndex');
+Route::get('danhMucMatHang', 'BillController@layDanhMucMatHang');
+// endregion
 
+// region -----2. Bao cao
+Route::get('baoCao/soLuongDatHangTheoTinhThanhTrenTungNhomHang', 'BillController@baoCaoSoLuongDatHangTheoTinhThanhTrenTungNhomHang');
 
-Route::get('reports/categoryProduct', 'BillController@reportCategoryByProduct');
+Route::get('baoCao/tongSuatThanhToanTheoNhomHang', 'BillController@baocaoTongSuatThanhToanTheoNhomHang');
 
 Route::get('baocao/tongSuatTheoF1FA', 'BillController@baocaoTongSuatTheoF1FA');
 
-Route::get('baocao/tongsuatThanhToanTheoNhomHang', 'BillController@baocaoTongsuatThanhToanTheoNhomHang');
+
 
 Route::get('baocao/xuatNhapTon', 'BillController@baocaoXuatNhapTon');
 
@@ -42,6 +30,8 @@ Route::get('baocao/thongKeTheoNhomHang', 'BillController@baocaoThongKeTheoNhomHa
 Route::get('baocao/danhSachTinhThanhCoDatHang', 'BillController@baocaoDanhSachTinhThanhCoDatHang');
 
 Route::get('baocao/danhSachTinhThanhCoXuatHang', 'BillController@baocaoDanhSachTinhThanhCoXuatHang');
+// endregion
+
 
 
 
