@@ -105,7 +105,7 @@ class BillController extends Controller
         $billFilter = Input::get();
         $data = $this->billService->baoCaoSoLuongDatHangTheoTinhThanhTrenTungNhomHang($billFilter);
         if(empty($data)){
-            return Response::responseNotFound();
+            return Response::response(array());
         }
         else{
             return Response::response($data);
@@ -116,7 +116,7 @@ class BillController extends Controller
         $filter = Input::get();
         $data = $this->billService->baocaoTongSuatThanhToanTheoNhomHang($filter);
         if(empty($data)){
-            return Response::responseNotFound();
+            return Response::response(array());
         }
         else{
             return Response::response($data);
@@ -131,7 +131,7 @@ class BillController extends Controller
         $filter = Input::get();
         $data = $this->billService->baoCaoTongSuatTheoNhom($filter);
         if(empty($data)){
-            return Response::responseNotFound();
+            return Response::response(array());
         }
         else{
             return Response::response($data);
@@ -146,7 +146,7 @@ class BillController extends Controller
         $filter = Input::get();
         $data = $this->billService->baoCaoXuatNhapTon($filter);
         if(empty($data)){
-            return Response::responseNotFound();
+            return Response::response(array());
         }
         else{
             return Response::response($data);
@@ -161,7 +161,7 @@ class BillController extends Controller
         $filter = Input::get();
         $data = $this->billService->baoCaoThongKeTheoTinh($filter);
         if(empty($data)){
-            return Response::responseNotFound();
+            return Response::response(array());
         }
         else{
             return Response::response($data);
@@ -176,7 +176,7 @@ class BillController extends Controller
         $filter = Input::get();
         $data = $this->billService->baoCaoThongKeTheoNhomHang($filter);
         if(empty($data)){
-            return Response::responseNotFound();
+            return Response::response(array());
         }
         else{
             return Response::response($data);
@@ -191,7 +191,7 @@ class BillController extends Controller
         $filter = Input::get();
         $data = $this->billService->baoCaoDanhSachTinhThanhCoDatHang($filter);
         if(empty($data)){
-            return Response::responseNotFound();
+            return Response::response(array());
         }
         else{
             return Response::response($data);
