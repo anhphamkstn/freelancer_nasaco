@@ -10,7 +10,7 @@ namespace App\Services;
 use App\Bill;
 use App\Province;
 use Illuminate\Support\Facades\Validator;
-
+use DB;
 
 class BillService
 {
@@ -138,13 +138,13 @@ class BillService
         }
     }
 
-    public function getDataReportByCategoryProduct($billFilter)
+    public function getDataReportByCategoryProduct($filter)
     {
         $query = Bill::query();
         $data = array();
         $dataTransform = array();
 
-        $startTime = strtotime("-21 day");
+        $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
 
         if (!empty($filter['startTime']))
@@ -152,10 +152,206 @@ class BillService
 
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
-        $query->whereBetween('created_at', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-
-        $data =  $query->get();
+        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.postal_code');
+        $data =  $query
+            ->groupby('bills.postal_code', 'provinces.name')
+            ->select(DB::raw('sum(bills.sl_dat_hang) as sl_dat_hang, bills.postal_code, provinces.name'))
+            ->get();
         return $data;
     }
 
+    public function baocaoTongSuatTheoNhom($filter)
+    {
+        $query = Bill::query();
+        $data = array();
+        $dataTransform = array();
+
+        $startTime = strtotime("-30 day");
+        $endTime = strtotime("now");
+        $nhom_hang = array();
+        if (!empty($filter['startTime']))
+            $startTime = strtotime($filter['startTime']);
+
+        if (!empty($filter['endTime']))
+            $endTime = strtotime($filter['endTime']);
+
+        if (!empty($filter['nhom_hang']))
+            $nhom_hang = $filter['nhom_hang'];
+        else{
+            $nhom_hang = ['F1','FA'];
+        }
+
+        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->whereIn('nhom_hang',$nhom_hang);
+        $data =  $query
+            ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat'))
+            ->get();
+        return $data;
+    }
+
+
+    public function baocaoTongsuatThanhToanTheoNhomHang($filter){
+        $query = Bill::query();
+        $data = array();
+        $dataTransform = array();
+
+        $startTime = strtotime("-30 day");
+        $endTime = strtotime("now");
+        $nhom_hang = array();
+        if (!empty($filter['startTime']))
+            $startTime = strtotime($filter['startTime']);
+
+        if (!empty($filter['endTime']))
+            $endTime = strtotime($filter['endTime']);
+
+        if (!empty($filter['nhom_hang']))
+            $nhom_hang = $filter['nhom_hang'];
+        else{
+            $nhom_hang = ['F1','F1','FA','E','G'];
+        }
+
+        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->whereIn('nhom_hang',$nhom_hang);
+        $data =  $query
+            ->groupby('nhom_hang')
+            ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat, sum(bills.sl_thanh_toan) as sl_thanh_toan, bills.nhom_hang'))
+            ->get();
+        return $data;
+    }
+
+    public function baocaoXuatNhapTon($filter){
+        $query = Bill::query();
+        $data = array();
+        $dataTransform = array();
+
+        $startTime = strtotime("-30 day");
+        $endTime = strtotime("now");
+        $nhom_hang = array();
+        if (!empty($filter['startTime']))
+            $startTime = strtotime($filter['startTime']);
+
+        if (!empty($filter['endTime']))
+            $endTime = strtotime($filter['endTime']);
+
+        if (!empty($filter['nhom_hang']))
+            $nhom_hang = $filter['nhom_hang'];
+        else{
+            $nhom_hang = ['F1','F1','FA','E','G'];
+        }
+
+        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->whereIn('nhom_hang',$nhom_hang);
+        $data =  $query
+            ->groupby('nhom_hang')
+            ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat, sum(bills.sl_dat_hang) as sl_dat_hang, bills.nhom_hang, (sum(bills.sl_dat_hang) - sum(bills.sl_thuc_xuat)) as sl_ton'))
+            ->get();
+        return $data;
+    }
+
+    public function baocaothongKeTheoTinh($filter){
+        $query = Bill::query();
+        $data = array();
+        $dataTransform = array();
+
+        $startTime = strtotime("-30 day");
+        $endTime = strtotime("now");
+        $nhom_hang = array();
+        if (!empty($filter['startTime']))
+            $startTime = strtotime($filter['startTime']);
+
+        if (!empty($filter['endTime']))
+            $endTime = strtotime($filter['endTime']);
+
+        if (!empty($filter['nhom_hang']))
+            $nhom_hang = $filter['nhom_hang'];
+        else{
+            $nhom_hang = ['F1','F1','FA','E','G'];
+        }
+        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->whereIn('nhom_hang',$nhom_hang);
+        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.postal_code');
+        $data =  $query
+            ->groupby('bills.postal_code','provinces.name','bills.nhom_hang')
+            ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat, sum(bills.sl_dat_hang) as sl_dat_hang, bills.postal_code, provinces.name,bills.nhom_hang'))
+            ->get();
+        return $data;
+    }
+    public function baocaoThongKeTheoNhomHang($filter){
+        $query = Bill::query();
+        $data = array();
+        $dataTransform = array();
+
+        $startTime = strtotime("-30 day");
+        $endTime = strtotime("now");
+        $nhom_hang = array();
+        if (!empty($filter['startTime']))
+            $startTime = strtotime($filter['startTime']);
+
+        if (!empty($filter['endTime']))
+            $endTime = strtotime($filter['endTime']);
+
+        if (!empty($filter['nhom_hang']))
+            $nhom_hang = $filter['nhom_hang'];
+        else{
+            $nhom_hang = ['F1','F1','FA','E','G'];
+        }
+        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->whereIn('nhom_hang',$nhom_hang);
+        $data =  $query
+            ->groupby('bills.nhom_hang')
+            ->select(DB::raw('sum(bills.sl_thuc_xuat) as sl_thuc_xuat, sum(bills.sl_dat_hang) as sl_dat_hang, sum(bills.sl_thanh_toan) as sl_thanh_toan, bills.nhom_hang'))
+            ->get();
+        return $data;
+    }
+
+
+    public function baocaoDanhSachTinhThanhCoDatHang($filter){
+        $query = Bill::query();
+        $data = array();
+        $dataTransform = array();
+
+        $startTime = strtotime("-30 day");
+        $endTime = strtotime("now");
+        $nhom_hang = array();
+        if (!empty($filter['startTime']))
+            $startTime = strtotime($filter['startTime']);
+
+        if (!empty($filter['endTime']))
+            $endTime = strtotime($filter['endTime']);
+
+        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->whereIn('nhom_hang',$nhom_hang);
+        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.postal_code');
+        $data =  $query
+            ->distinct('bills.postal_code', 'provinces.name','provinces.code')
+            ->where('bills.sl_dat_hang', '>', 0)
+            ->get();
+        return $data;
+    }
+
+
+    public function baocaoDanhSachTinhThanhCoXuatHang($filter){
+        $query = Bill::query();
+        $data = array();
+        $dataTransform = array();
+
+        $startTime = strtotime("-30 day");
+        $endTime = strtotime("now");
+        $nhom_hang = array();
+        if (!empty($filter['startTime']))
+            $startTime = strtotime($filter['startTime']);
+
+        if (!empty($filter['endTime']))
+            $endTime = strtotime($filter['endTime']);
+
+        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->whereIn('nhom_hang',$nhom_hang);
+        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.postal_code');
+        $data =  $query
+            ->distinct('bills.postal_code', 'provinces.name','provinces.code')
+            ->where('bills.sl_thuc_xuat', '>', 0)
+            ->get();
+        return $data;
+    }
 }
