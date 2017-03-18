@@ -352,31 +352,36 @@ class BillService
         $data = null;
         $bills = Bill::whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)))->get();
         foreach($tinhThanhCoDatHang as $tinh){
-            $data['tinh'] = $tinh;
-            $nhomHang = ProductCategory::get();
-            $dataTheoNhom = array();
-            if(!empty($nhomHang)){
-                $dataTransform = null;
-                foreach ($nhomHang as $item){
-                    $dataTransform['nhomHang'] = $item->name;
-                    $soLuongThucXuat = 0;
-                    $soLuongThanhToan = 0;
-                    $soLuongDathang = 0;
-                    foreach ($bills as $bill){
-                        if($bill->ma_buu_chinh == $tinh && $bill->nhom_hang == $item->name){
-                            $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
-                            $soLuongThanhToan = $soLuongThanhToan + $bill->sl_thanh_toan;
-                            $soLuongDathang = $soLuongDathang + $bill->sl_dat_hang;
+            $province = $this->getProvinceByPostalCode($tinh);
+            if(!empty($province)){
+                $data['postal_code'] = $province->postal_code;
+                $data['code'] = $province->code;
+                $data['name'] = $province->name;
+                $nhomHang = ProductCategory::get();
+                $dataTheoNhom = array();
+                if(!empty($nhomHang)){
+                    $dataTransform = null;
+                    foreach ($nhomHang as $item){
+                        $dataTransform['nhomHang'] = $item->name;
+                        $soLuongThucXuat = 0;
+                        $soLuongThanhToan = 0;
+                        $soLuongDathang = 0;
+                        foreach ($bills as $bill){
+                            if($bill->ma_buu_chinh == $tinh && $bill->nhom_hang == $item->name){
+                                $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
+                                $soLuongThanhToan = $soLuongThanhToan + $bill->sl_thanh_toan;
+                                $soLuongDathang = $soLuongDathang + $bill->sl_dat_hang;
+                            }
                         }
+                        $dataTransform['soLuongThucXuat'] = $soLuongThucXuat;
+                        $dataTransform['soLuongThanhToan'] = $soLuongThanhToan;
+                        $dataTransform['soLuongDatHang'] = $soLuongDathang;
+                        $dataTheoNhom[] = $dataTransform;
                     }
-                    $dataTransform['soLuongThucXuat'] = $soLuongThucXuat;
-                    $dataTransform['soLuongThanhToan'] = $soLuongThanhToan;
-                    $dataTransform['soLuongDatHang'] = $soLuongDathang;
-                    $dataTheoNhom[] = $dataTransform;
                 }
+                $data['dataTheoNhom'] = $dataTheoNhom;
+                $dataTransforms[] = $data;
             }
-            $data['dataTheoNhom'] = $dataTheoNhom;
-            $dataTransforms[] = $data;
         }
         return $dataTransforms;
     }
@@ -448,5 +453,10 @@ class BillService
             ->select('bills.ma_buu_chinh', 'provinces.name','provinces.code')
             ->get();
         return $data;
+    }
+
+    private function getProvinceByPostalCode($postalCode){
+        $province = Province::where('postal_code', $postalCode)->first();
+        return $province;
     }
 }
