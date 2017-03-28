@@ -10485,13 +10485,13 @@ return jQuery;
             }
         }).then(function (response) {
             me.fillListProvice(response.data);
-            me.drawReportF1(response.data);
             $("#loading-6").css("display", "none");
             $("#loading-2").css("display", "none");
             $("#loading-5").css("display", "none");
             $("#loading-7").css("display", "none");
             $("#loading-8").css("display", "none");
             $("#loading-9").css("display", "none");
+            me.drawReportF1(response.data);
             me.drawReportFa(response.data);
             me.drawReport3(response.data);
             me.drawGeoChart(response.data);
@@ -10532,7 +10532,6 @@ return jQuery;
 
         var areas = [];
 
-        if (source.result.length == 0) return;
         source.result.forEach(function (e) {
 
             var total = 0;
@@ -10577,7 +10576,6 @@ return jQuery;
         var dataThucXuat = [];
         var dataThanhToan = [];
 
-        if (source.result.length == 0) return;
         source.result.forEach(function (e) {
             labels.push(e.name);
             dataDatHang.push(e.dataTheoNhom[0].soLuongDatHang);
@@ -10624,8 +10622,6 @@ return jQuery;
         var dataDatHang = [];
         var dataThucXuat = [];
         var dataThanhToan = [];
-
-        if (source.result.length == 0) return;
         source.result.forEach(function (e) {
             labels.push(e.name);
             dataDatHang.push(e.dataTheoNhom[2].soLuongDatHang);
@@ -10671,7 +10667,6 @@ return jQuery;
         var labels = [];
         var dataTheoNhomNganh = { F1: [], F2: [], FA: [], E: [], G: [] };
 
-        if (source.result.length == 0) return;
         source.result.forEach(function (e) {
             labels.push(e.name);
             dataTheoNhomNganh.F1.push(e.dataTheoNhom[0].soLuongDatHang);
@@ -10729,7 +10724,6 @@ return jQuery;
     Controller.Dashboard.prototype.drawReport4 = function (datas) {
 
         var soLieu = [];
-        if (datas.result.length == 0) return;
         datas.result.forEach(function (e) {
             soLieu.push(e.soLuongDatHang);
         });

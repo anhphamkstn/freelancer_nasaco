@@ -16,7 +16,19 @@
     </div>    
     <div class="row">
         <div class="col-md-12" >
-            @include('dashboard.time-picker')
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <i class="fa fa-filter" aria-hidden="true"></i>
+                    <h3 class="box-title">Lọc theo ngày</h3>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class='col-md-12'>
+                           @include('dashboard.time-picker')
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-3">
             <div class="box box-solid box-height-220 box-type-1">
