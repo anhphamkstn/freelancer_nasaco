@@ -21,7 +21,7 @@ class BillController extends Controller
         $this->billService = $billService;
     }
 
-    // region /** Danh muc & du lieu **/
+    // region DANH MUC & DU LIEU
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -62,6 +62,30 @@ class BillController extends Controller
         else{
             return Response::responseNotFound();
         }
+    }
+
+    public function index(){
+        $filter = Input::get();
+        $queryBuilder = $this->billService->getBillListingQueryBuilder($filter);
+
+        $filter['perPage'] = isset($filter['perPage']) ? $filter['perPage'] : 10;
+        $filter['page'] = isset($filter['page']) ? $filter['page'] : 1;
+
+        $pagination = $queryBuilder->paginate($filter['perPage'], ['*'], 'page', $filter['page']);
+
+        $pageCount = $pagination->lastPage();
+
+        $bills = $this->billService->getTransformedItems($pagination->items());
+
+        return Response::responseWithPageCount($bills, 200, 'OK', [], $pageCount);
+    }
+
+    public function update(){
+        return 'update';
+    }
+
+    public function delete(){
+        return 'delete';
     }
 
     /**

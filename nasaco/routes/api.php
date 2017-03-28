@@ -5,11 +5,19 @@ use Illuminate\Http\Request;
 // region -----1. Bill & danh muc
 Route::post('bills', 'BillController@store');
 
+Route::get('bills', 'BillController@index');
+
+Route::put('bills/{BillId}', 'BillController@update');
+
+Route::delete('bills/{BillId}', 'BillController@delete');
+
+
 Route::get('provinces', 'BillController@provinceIndex');
 
 Route::get('danhMucNhomHang', 'BillController@layDanhMucNhomHang');
 
 Route::get('danhMucMatHang', 'BillController@layDanhMucMatHang');
+
 // endregion
 
 // region -----2. Bao cao

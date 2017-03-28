@@ -12,6 +12,7 @@ use App\Province;
 use App\ProductCategory;
 use Illuminate\Support\Facades\Validator;
 use DB;
+use App\Helpers\StringHelper;
 
 class BillService
 {
@@ -32,6 +33,9 @@ class BillService
         'thanh_tien_thanh_toan',
         'ma_buu_chinh'
     ];
+
+    protected $searchFields = ['mat_hang', 'dien_giai'];
+    protected $filterFields = ['nhom_hang', 'ma_buu_chinh','dvt'];
 
     /**
      * @param $info
@@ -81,6 +85,54 @@ class BillService
         catch(\Exception $e){
             return null;
         }
+    }
+
+    public function getBillListingQueryBuilder($filter){
+        $query = Bill::query();
+        if (isset($filter['startTime'])) {
+            $startTime = $filter['startTime'];
+            $query->where('ngay_thang_nam', '>=', $startTime);
+        }
+
+        if (isset($filter['endTime'])) {
+            $endTime = $filter['endTime'];
+            $query->where('ngay_thang_nam', '<=', $endTime);
+        }
+
+        if (isset($filter['search']) && trim($filter['search'])) {
+            $keyword = $filter['search'];
+
+            $query->where(function ($query) use ($keyword) {
+                foreach ($this->searchFields as $key => $searchField) {
+                    $query->orWhere($searchField, 'ilike', "%{$keyword}%");
+                }
+            });
+        }
+        foreach ($this->filterFields as $filterField) {
+            $filterParamName = StringHelper::pascalCaseToCamelCase($filterField);
+
+            if (isset($filter[$filterParamName])) {
+                $filterValue = $filter[$filterParamName];
+                $query->where($filterField, '=', $filterValue);
+            }
+        }
+        $filter['sortBy'] = isset($filter['sortBy']) ? $filter['sortBy'] : 'id';
+        $filter['orderDirection'] = isset($filter['orderDirection']) ? $filter['orderDirection'] : 'asc';
+
+        $query->orderBy($filter['sortBy'], $filter['orderDirection']);
+        dd($query->toSql());
+        return $query;
+    }
+
+    public function getTransformedItems($items){
+        $transformedItems = [];
+        foreach($items as $item)
+        {
+            $transformedItem = $this->transform($item);
+            if (isset($transformedItem))
+                $transformedItems[] = $transformedItem;
+        }
+        return $transformedItems;
     }
 
     /**
