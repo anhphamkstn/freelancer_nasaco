@@ -80,12 +80,37 @@ class BillController extends Controller
         return Response::responseWithPageCount($bills, 200, 'OK', [], $pageCount);
     }
 
-    public function update(){
-        return 'update';
+    public function update(Request $request, $id){
+        $info = $request->all();
+        $bill = $this->billService->findResource($id);
+        if (!$bill)
+            return Response::responseNotFound();
+        $validator = $this->billService->validateInfo($info, 'update', $id);
+        if ($validator->fails()) {
+            $errorMsg = $validator->errors()->all();
+            return Response::responseValidateFailed(implode(' | ', $errorMsg));
+        }
+        try{
+            $data = $this->billService->update($bill, $info);
+            return Response::response($data);
+        }
+        catch(\Exception $e){
+            return Response::responseWithError('Error update bill!');
+        }
     }
 
-    public function delete(){
-        return 'delete';
+    public function delete($billId){
+        try{
+            $isDeleted = $this->billService->delete($billId);
+            if (isset($isDeleted) && ($isDeleted == 1))
+                return Response::response([]);
+            else{
+                return Response::responseWithError('Error delete bill!', 500);
+            }
+        }
+        catch(\Exception $e){
+            return Response::responseWithError('Error delete bill!', 500);
+        }
     }
 
     /**

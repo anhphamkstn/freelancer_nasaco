@@ -87,6 +87,11 @@ class BillService
         }
     }
 
+    /**
+     * @param $filter
+     * @return \Illuminate\Database\Eloquent\Builder
+     * get query bill
+     */
     public function getBillListingQueryBuilder($filter){
         $query = Bill::query();
         if (isset($filter['startTime'])) {
@@ -104,7 +109,7 @@ class BillService
 
             $query->where(function ($query) use ($keyword) {
                 foreach ($this->searchFields as $key => $searchField) {
-                    $query->orWhere($searchField, 'ilike', "%{$keyword}%");
+                    $query->orWhere($searchField, 'like', "%{$keyword}%");
                 }
             });
         }
@@ -120,10 +125,14 @@ class BillService
         $filter['orderDirection'] = isset($filter['orderDirection']) ? $filter['orderDirection'] : 'asc';
 
         $query->orderBy($filter['sortBy'], $filter['orderDirection']);
-        dd($query->toSql());
         return $query;
     }
 
+    /**
+     * @param $items
+     * @return array
+     * transform item bill
+     */
     public function getTransformedItems($items){
         $transformedItems = [];
         foreach($items as $item)
@@ -134,6 +143,39 @@ class BillService
         }
         return $transformedItems;
     }
+
+    /**
+     * @param $billId
+     * @return bill model
+     * find bill by id
+     */
+    public function findResource($billId){
+        return Bill::findOrFail($billId);
+    }
+
+    /**
+     * @param Account $instance
+     * @param $info
+     * @return array|null
+     * to do: update bill model
+     */
+    public function update(Bill $instance, $info)
+    {
+        foreach ($this->fillable as $attr) {
+            $filterParamName = StringHelper::pascalCaseToCamelCase($attr);
+            if (isset($info[$filterParamName])) {
+                $instance->$attr = $info[$filterParamName];
+            }
+        }
+        $instance->save();
+        return $this->transform($instance);
+    }
+
+    public function delete($billId)
+    {
+        return Bill::destroy($billId);
+    }
+
 
     /**
      * @param $bill
