@@ -21,7 +21,7 @@ class BillController extends Controller
         $this->billService = $billService;
     }
 
-    // region /** Danh muc & du lieu **/
+    // region DANH MUC & DU LIEU
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -61,6 +61,55 @@ class BillController extends Controller
         }
         else{
             return Response::responseNotFound();
+        }
+    }
+
+    public function index(){
+        $filter = Input::get();
+        $queryBuilder = $this->billService->getBillListingQueryBuilder($filter);
+
+        $filter['perPage'] = isset($filter['perPage']) ? $filter['perPage'] : 10;
+        $filter['page'] = isset($filter['page']) ? $filter['page'] : 1;
+
+        $pagination = $queryBuilder->paginate($filter['perPage'], ['*'], 'page', $filter['page']);
+
+        $pageCount = $pagination->lastPage();
+
+        $bills = $this->billService->getTransformedItems($pagination->items());
+
+        return Response::responseWithPageCount($bills, 200, 'OK', [], $pageCount);
+    }
+
+    public function update(Request $request, $id){
+        $info = $request->all();
+        $bill = $this->billService->findResource($id);
+        if (!$bill)
+            return Response::responseNotFound();
+        $validator = $this->billService->validateInfo($info, 'update', $id);
+        if ($validator->fails()) {
+            $errorMsg = $validator->errors()->all();
+            return Response::responseValidateFailed(implode(' | ', $errorMsg));
+        }
+        try{
+            $data = $this->billService->update($bill, $info);
+            return Response::response($data);
+        }
+        catch(\Exception $e){
+            return Response::responseWithError('Error update bill!');
+        }
+    }
+
+    public function delete($billId){
+        try{
+            $isDeleted = $this->billService->delete($billId);
+            if (isset($isDeleted) && ($isDeleted == 1))
+                return Response::response([]);
+            else{
+                return Response::responseWithError('Error delete bill!', 500);
+            }
+        }
+        catch(\Exception $e){
+            return Response::responseWithError('Error delete bill!', 500);
         }
     }
 

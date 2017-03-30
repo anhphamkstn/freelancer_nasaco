@@ -12,6 +12,7 @@ use App\Province;
 use App\ProductCategory;
 use Illuminate\Support\Facades\Validator;
 use DB;
+use App\Helpers\StringHelper;
 
 class BillService
 {
@@ -32,6 +33,9 @@ class BillService
         'thanh_tien_thanh_toan',
         'ma_buu_chinh'
     ];
+
+    protected $searchFields = ['mat_hang', 'dien_giai'];
+    protected $filterFields = ['nhom_hang', 'ma_buu_chinh','dvt'];
 
     /**
      * @param $info
@@ -82,6 +86,96 @@ class BillService
             return null;
         }
     }
+
+    /**
+     * @param $filter
+     * @return \Illuminate\Database\Eloquent\Builder
+     * get query bill
+     */
+    public function getBillListingQueryBuilder($filter){
+        $query = Bill::query();
+        if (isset($filter['startTime'])) {
+            $startTime = $filter['startTime'];
+            $query->where('ngay_thang_nam', '>=', $startTime);
+        }
+
+        if (isset($filter['endTime'])) {
+            $endTime = $filter['endTime'];
+            $query->where('ngay_thang_nam', '<=', $endTime);
+        }
+
+        if (isset($filter['search']) && trim($filter['search'])) {
+            $keyword = $filter['search'];
+
+            $query->where(function ($query) use ($keyword) {
+                foreach ($this->searchFields as $key => $searchField) {
+                    $query->orWhere($searchField, 'like', "%{$keyword}%");
+                }
+            });
+        }
+        foreach ($this->filterFields as $filterField) {
+            $filterParamName = StringHelper::pascalCaseToCamelCase($filterField);
+
+            if (isset($filter[$filterParamName])) {
+                $filterValue = $filter[$filterParamName];
+                $query->where($filterField, '=', $filterValue);
+            }
+        }
+        $filter['sortBy'] = isset($filter['sortBy']) ? $filter['sortBy'] : 'id';
+        $filter['orderDirection'] = isset($filter['orderDirection']) ? $filter['orderDirection'] : 'asc';
+
+        $query->orderBy($filter['sortBy'], $filter['orderDirection']);
+        return $query;
+    }
+
+    /**
+     * @param $items
+     * @return array
+     * transform item bill
+     */
+    public function getTransformedItems($items){
+        $transformedItems = [];
+        foreach($items as $item)
+        {
+            $transformedItem = $this->transform($item);
+            if (isset($transformedItem))
+                $transformedItems[] = $transformedItem;
+        }
+        return $transformedItems;
+    }
+
+    /**
+     * @param $billId
+     * @return bill model
+     * find bill by id
+     */
+    public function findResource($billId){
+        return Bill::findOrFail($billId);
+    }
+
+    /**
+     * @param Account $instance
+     * @param $info
+     * @return array|null
+     * to do: update bill model
+     */
+    public function update(Bill $instance, $info)
+    {
+        foreach ($this->fillable as $attr) {
+            $filterParamName = StringHelper::pascalCaseToCamelCase($attr);
+            if (isset($info[$filterParamName])) {
+                $instance->$attr = $info[$filterParamName];
+            }
+        }
+        $instance->save();
+        return $this->transform($instance);
+    }
+
+    public function delete($billId)
+    {
+        return Bill::destroy($billId);
+    }
+
 
     /**
      * @param $bill
