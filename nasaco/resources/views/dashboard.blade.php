@@ -1,4 +1,4 @@
-@extends('layouts.app',['activemenuitem'=>'dashboard'])
+    @extends('layouts.app',['activemenuitem'=>'dashboard'])
 
 @push('styles')
     <link rel="stylesheet" href="/tooltipster/dist/css/tooltipster.bundle.min.css" type="text/css" />
@@ -209,8 +209,10 @@
                     @include('dashboard.loading')
                 </div>
                 <div class="report-title">Cơ cấu hàng theo tỉnh</div>
-                <div class="box-body" style="height:260px; overflow-y : scroll">
-                    <canvas id="report-3" width="400" height="560" style="margin-top:20px;width: 100% ;height:560px"></canvas>
+                <div class="box-body">
+                    <div style="overflow-y : scroll; position: relative; margin-top:20px; height:230px;">
+                        <canvas id="report-3" width="400" height="560" style="width: 100% ;height:560px"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
