@@ -2,6 +2,7 @@ window.Controller = window.Controller || {};
 
 (function(Controller) {
     Controller.Dashboard = function() {
+        this.initType();
         this.getData();
     }
 
@@ -112,7 +113,7 @@ window.Controller = window.Controller || {};
     };
 
     Controller.Dashboard.prototype.getData = function() {
-        this.initType();
+        
         this.callApiTongSuatThanhToan();
         this.callApiXuatNhapTon();
         this.callApiListProvince();
