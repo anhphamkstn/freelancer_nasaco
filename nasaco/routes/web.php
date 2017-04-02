@@ -19,3 +19,11 @@ Route::get('/import', function () {
     return view('importExcel');
 });
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');

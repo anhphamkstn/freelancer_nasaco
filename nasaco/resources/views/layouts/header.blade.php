@@ -3,7 +3,7 @@
     <a href="#" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini">
-        <i class="fa fa-home" aria-hidden="true"></i>
+        <i class="fa fa-home" aria-hidden="true" style="margin-top: 15px;"></i>
       </span>
       <!-- logo for regular state and mobile devices -->
       <span class="logo-lg"><b>Nasaco</b></span>

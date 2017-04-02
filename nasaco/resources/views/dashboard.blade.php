@@ -1,4 +1,4 @@
-    @extends('layouts.app',['activemenuitem'=>'dashboard'])
+@extends('layouts.home',['activemenuitem'=>'dashboard'])
 
 @push('styles')
     <link rel="stylesheet" href="/tooltipster/dist/css/tooltipster.bundle.min.css" type="text/css" />
@@ -6,6 +6,17 @@
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/default.css" type="text/css"></link>
 @endpush
+
+@section('content-header')
+    <h1>
+        Dashboard
+        <small>Control panel</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+      </ol>
+@endsection
 
 @section('content')
     <div style="display:none" id="loading-dashboard" class="overlay">

@@ -1,4 +1,4 @@
-@extends('layouts.app',['activemenuitem'=>'importExcel'])
+@extends('layouts.home',['activemenuitem'=>'importExcel'])
 
 @push('styles')
     <link rel="stylesheet" href="/tooltipster/dist/css/tooltipster.bundle.min.css" type="text/css" />
@@ -8,6 +8,17 @@
      <link rel="stylesheet" href=" https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" type="text/css" />
    
 @endpush
+
+@section('content-header')
+    <h1>
+        Import Data
+        <small>Control panel</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Import Data</li>
+      </ol>
+@endsection
 
 @section('content')
     <div style="display:none" id="loading-dashboard" class="overlay">
