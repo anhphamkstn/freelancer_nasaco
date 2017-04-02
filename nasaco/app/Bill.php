@@ -10,7 +10,6 @@ class Bill extends Model
     protected $table = 'bills';
 
     protected $fillable = [
-        'id',
         'ngay',
         'thang',
         'nam',

@@ -10336,7 +10336,6 @@ return jQuery;
 
 (function (Controller) {
     Controller.Dashboard = function () {
-        this.initType();
         this.getData();
     };
 
@@ -10439,7 +10438,8 @@ return jQuery;
     };
 
     Controller.Dashboard.prototype.getData = function () {
-
+        this.initType();
+        this.initProvince();
         this.callApiTongSuatThanhToan();
         this.callApiXuatNhapTon();
         this.callApiListProvince();
@@ -10480,6 +10480,22 @@ return jQuery;
                 }
             }
         }
+    };
+
+    Controller.Dashboard.prototype.initProvince = function () {
+        var me = this;
+        var timeRange = this.getDateTimeFilter();
+        axios.get('/api/baoCao/danhSachTinhThanhCoDatHang', {
+            params: {
+                startTime: timeRange.startTime,
+                endTime: timeRange.endTime
+            }
+        }).then(function (response) {
+            me.fillListProvice(response.data);
+        }).catch(function (e) {
+            console.log(e);
+            alert("Có lỗi xảy ra.Vui lòng liên hệ admin.");
+        });
     };
 
     Controller.Dashboard.prototype.getDateTimeFilter = function () {
@@ -10559,7 +10575,7 @@ return jQuery;
                 endTime: timeRange.endTime
             }
         }).then(function (response) {
-            me.fillListProvice(response.data);
+            // me.fillListProvice(response.data);
             $("#loading-6").css("display", "none");
             $("#loading-2").css("display", "none");
             $("#loading-5").css("display", "none");

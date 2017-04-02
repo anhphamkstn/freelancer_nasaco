@@ -141,7 +141,7 @@
                                 <button class="btn btn-xs btn-success"><i class="fa fa-search" aria-hidden="true"></i></button>
                             </div>
                         </div>
-                        <div class="box-body" style="height: 200px;overflow-y: scroll;">
+                        <div class="box-body" style="height: 200px;overflow-y: scroll; padding-top: 0;">
                             <table  id="list-provice" class="table-select" style="margin: 5px auto; font-size: 17px; width: 100%;">
                                 
                             </table>

@@ -11,19 +11,22 @@
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
+
+
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
+Route::get('/register', function () {
+    return view('auth.register');
 });
 
-Route::get('/import', function () {
-    return view('importExcel');
+Route::group(['middleware' => 'AuthApi'], function () {
+    Route::get('/', function () {
+	    return view('dashboard');
+	});
+
+	Route::get('/import', function () {
+	    return view('importExcel');
+	});
 });
-
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index');

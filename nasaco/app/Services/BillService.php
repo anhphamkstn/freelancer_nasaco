@@ -541,6 +541,7 @@ class BillService
             $endTime = strtotime($filter['endTime']);
 
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->whereNotNull('bills.ma_buu_chinh');
         $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
         $data =  $query
             ->distinct('bills.ma_buu_chinh', 'provinces.name','provinces.code')
