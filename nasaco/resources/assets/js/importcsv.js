@@ -3,12 +3,31 @@ window.Controller = window.Controller || {};
 (function(Controller) {
     Controller.importCsv = function() {
         this.initImportCSV();
+        this.getBills();
     }
 
     Controller.importCsv.prototype.initImportCSV = function() {
         // document.getElementById('iportCSV').addEventListener('change', handleFile, false);
         document.getElementById('submit').addEventListener('click', handleFile, false);
     }
+
+    Controller.importCsv.prototype.getBills = function() {
+        var timeRange = Controller.DateFilter.startTime ? Controller.DateFilter : { startTime: moment().subtract(3, 'years'), endTime: moment() }
+        axios.get('/api/bills', {
+            params: {
+                startTime: timeRange.startTime,
+                endTime: timeRange.endTime
+            }
+        }).then(function(res) {
+            console.log(res);
+
+        }).catch(function(e) {
+
+            alert("Có lỗi xảy ra.Vui lòng liên hệ admin.")
+        })
+    }
+
+
 
 
 })(window.Controller);
