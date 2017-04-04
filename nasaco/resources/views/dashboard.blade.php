@@ -1,4 +1,4 @@
-@extends('layouts.app',['activemenuitem'=>'dashboard'])
+@extends('layouts.home',['activemenuitem'=>'dashboard'])
 
 @push('styles')
     <link rel="stylesheet" href="/tooltipster/dist/css/tooltipster.bundle.min.css" type="text/css" />
@@ -6,6 +6,17 @@
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/default.css" type="text/css"></link>
 @endpush
+
+@section('content-header')
+    <h1>
+        Dashboard
+        <small>Control panel</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+      </ol>
+@endsection
 
 @section('content')
     <div style="display:none" id="loading-dashboard" class="overlay">
@@ -30,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="box box-solid box-height-220 box-type-1">
                 <div class="overlay display-none" id="loading-1">
                     @include('dashboard.loading')
@@ -88,7 +99,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-5">
             <div class="box box-solid box-height-220">
                 <div class="overlay display-none" id="loading-4">
                     @include('dashboard.loading')
@@ -116,43 +127,51 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="box box-solid box-height-260 box-type-1">
+                    <div class="box box-solid box-height-260 box-type-1 position-container">
                         <div class="overlay display-none" id="loading-5">
                             @include('dashboard.loading')
                         </div>
                         <div class="box-header">
                             <h5 class="box-title">TỈNH THÀNH</h5>
+                            <div class="top-right">
+                                <button onclick="dashboard.clearSelected('list-provice')" class="btn btn-xs"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                <button class="btn btn-xs btn-success"><i class="fa fa-search" aria-hidden="true"></i></button>
+                            </div>
                         </div>
-                        <div class="box-body " style="height: 200px;overflow-y: scroll;">
-                            <table  id="list-provice" style="font-size: 26px; margin: 5px auto;">
+                        <div class="box-body" style="height: 200px;overflow-y: scroll; padding-top: 0;">
+                            <table  id="list-provice" class="table-select" style="margin: 5px auto; font-size: 17px; width: 100%;">
                                 
                             </table>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="box box-solid box-height-260 box-type-1">
+                    <div class="box box-solid box-height-260 box-type-1 position-container">
                         <div class="box-header">
                             <h5 class="box-title">NHÓM HÀNG</h5>
+                            <div class="top-right">
+                                <button onclick="dashboard.clearSelected('list-type')" class="btn btn-xs"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                <button class="btn btn-xs btn-success"><i class="fa fa-search" aria-hidden="true"></i></button>
+                            </div>
                         </div>
                         <div class="box-body">
-                            <table style="font-size: 26px; margin: auto;">
-                                <tr>
+                            <table id="list-type" class="table-select" style="font-size: 26px; margin: auto; width: 100%">
+                                <tr data-value='F1'>
                                     <td>F1</td>
                                 </tr>
-                                <tr>
+                                <tr data-value='F2'>
                                     <td>F2</td>
                                 </tr>
-                                <tr>
+                                <tr data-value='FA'>
                                     <td>FA</td>
                                 </tr>
-                                <tr>
+                                <tr data-value='E'>
                                     <td>E</td>
                                 </tr>
-                                <tr>
+                                <tr data-value='G'>
                                     <td>G</td>
                                 </tr>
                             </table>
@@ -161,7 +180,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-7">
             <div class="row">
                 <div class="col-md-12">
                     <div class="box box-solid box-height-260" style="position: relative;">
@@ -195,7 +214,7 @@
                 <div id="geochart-colors" style="width: 100%; height: 100%;"></div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="box box-solid box-height-280">
                 
                 <div class="box-body">
@@ -203,14 +222,16 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <div class="box box-solid box-height-280" style="position: relative;">
                 <div class="overlay display-none" id="loading-9">
                     @include('dashboard.loading')
                 </div>
                 <div class="report-title">Cơ cấu hàng theo tỉnh</div>
-                <div class="box-body" style="height:260px; overflow-y : scroll">
-                    <canvas id="report-3" width="400" height="560" style="margin-top:20px;width: 100% ;height:560px"></canvas>
+                <div class="box-body">
+                    <div style="overflow-y : scroll; position: relative; margin-top:20px; height:230px;">
+                        <canvas id="report-3" width="400" height="560" style="width: 100% ;height:560px"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -248,7 +269,10 @@
     <script>
         window.Controller = window.Controller || {};
         var controller = window.Controller;
-        controller.DateFilter = { startTime: moment().subtract(3, 'years').format('YYYY-MM-DD'), endTime: moment().format('YYYY-MM-DD') };
+        var thisYear = (new Date()).getFullYear();    
+        var start = new Date("1/1/" + thisYear);
+        var defaultStart = moment(start.valueOf());
+        controller.DateFilter = { startTime: defaultStart.format('YYYY-MM-DD'), endTime: moment().format('YYYY-MM-DD') };
         $(function () {
             
             $('#date-range-picker').daterangepicker({
@@ -275,7 +299,7 @@
                     ]
                 },
                 "alwaysShowCalendars": true,
-                "startDate": moment().subtract(3, 'years'),
+                "startDate": defaultStart,
                 "endDate": moment(),
                 "opens": "left"
             }, function(start, end, label) {

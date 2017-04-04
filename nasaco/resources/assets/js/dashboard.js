@@ -26,8 +26,12 @@ window.Controller = window.Controller || {};
         });
         chart.options.width = 120;
         chart.options.height = 120;
-        chart.redFrom = 75;
-        chart.redTo = 100;
+        chart.options.redFrom = 0;
+        chart.options.redTo = 50;
+        chart.options.yellowFrom = 50;
+        chart.options.yellowTo = 75;
+        chart.options.greenFrom = 75;
+        chart.options.greenTo = 100;
         chart.draw(
             [
                 ['Label', 'Value'],
@@ -108,10 +112,40 @@ window.Controller = window.Controller || {};
     };
 
     Controller.Dashboard.prototype.getData = function() {
+        this.initType();
+        this.initProvince();
         this.callApiTongSuatThanhToan();
         this.callApiXuatNhapTon();
         this.callApiListProvince();
         this.callApithongKeTheoNhomHang();
+    }
+
+    Controller.Dashboard.prototype.initType = function() {
+        let me = this;
+        let tb = $('#list-type');
+        let trs = $(tb.children()[0]).children();
+        for(let tr of trs) {
+            $(tr).click(() => {
+                me.toggleSelect(tr);
+            });
+        }
+    }
+
+    Controller.Dashboard.prototype.initProvince = function() {
+        var me = this;
+        var timeRange = this.getDateTimeFilter();
+        axios.get('/api/baoCao/danhSachTinhThanhCoDatHang', {
+            params: {
+                startTime: timeRange.startTime,
+                endTime: timeRange.endTime
+            }
+        })
+        .then(function(response) {
+            me.fillListProvice(response.data);
+        }).catch(function(e) {
+            console.log(e);
+            alert("Có lỗi xảy ra.Vui lòng liên hệ admin.")
+        })
     }
 
     Controller.Dashboard.prototype.getDateTimeFilter = function() {
@@ -196,7 +230,7 @@ window.Controller = window.Controller || {};
                 }
             })
             .then(function(response) {
-                me.fillListProvice(response.data);
+                // me.fillListProvice(response.data);
                 $("#loading-6").css("display", "none");
                 $("#loading-2").css("display", "none");
                 $("#loading-5").css("display", "none");
@@ -214,13 +248,47 @@ window.Controller = window.Controller || {};
     }
 
     Controller.Dashboard.prototype.fillListProvice = function(data) {
-        var content = "";
+        let me = this;
+        let table = $('#list-provice');
+        table.html("");
+        let tbody = $('<tbody></tbody>');
+        table.append(tbody);
         if (data.result.length == 0) return;
         data.result.forEach(function(e) {
-            content += "<tr><td>" + e.name + "</td></tr>";
+            let tr = $('<tr data-value="' + e.postal_code +  '"><td>' + e.name + "</td></tr>");
+            tr.click(() => {
+                me.toggleSelect(tr);
+            });
+            tbody.append(tr);
         });
-        $('#list-provice').html(content);
+    }
 
+    Controller.Dashboard.prototype.clearSelected = function(id) {
+        let tb = $('#'+id);
+        let trs = $(tb.children()[0]).children();
+        for(let tr of trs) {
+            $(tr).removeClass('selected');
+        }
+    }
+
+    Controller.Dashboard.prototype.getSelectedValue = function(id) {
+        let data = [];
+        let tb = $('#'+id);
+        let trs = $(tb.children()[0]).children();
+        for(let tr of trs) {
+            if($(tr).hasClass('selected')) {
+                data.push($(tr).data('value'));
+            }
+        }
+        return data;
+    }
+
+    Controller.Dashboard.prototype.toggleSelect = function(div) {
+        if($(div).hasClass('selected')) {
+            $(div).removeClass('selected');
+        } else {
+            $(div).addClass('selected');
+        }
     }
 
     Controller.Dashboard.prototype.callApithongKeTheoNhomHang = function() {
@@ -273,8 +341,8 @@ window.Controller = window.Controller || {};
 
             "valueLegend": {
                 "right": 10,
-                "minValue": "little",
-                "maxValue": "a lot!"
+                "minValue": "Low",
+                "maxValue": "High"
             },
 
             "export": {

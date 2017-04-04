@@ -19,8 +19,6 @@ class CreateProvincesTable extends Migration
             $table->string('code');
             $table->string('name');
             $table->integer('postal_code');
-
-            $table->timestamps();
         });
     }
 

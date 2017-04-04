@@ -2,6 +2,15 @@
 
 use Illuminate\Http\Request;
 
+Route::group(['middleware' => 'AuthApi'], function () {
+    Route::get('/user', function (Request $request) {
+    	$user = App\User::where('id',$request->auth_user_id)
+					->with('roles')
+					->first();
+	    return $user;
+	});
+});
+
 // region -----1. Bill & danh muc
 Route::post('bills', 'BillController@store');
 
@@ -38,6 +47,6 @@ Route::get('baoCao/danhSachTinhThanhCoDatHang', 'BillController@baoCaoDanhSachTi
 // endregion
 
 
-
-
-
+Route::post('register','UserController@register');
+Route::post('login','UserController@login');
+Route::post('logout','UserController@logout')->middleware('AuthApi');

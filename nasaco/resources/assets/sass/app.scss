@@ -1,5 +1,6 @@
 // Variables
 @import "variables";
+
 .table-type-1 {
     width: 100%;
     color: rgb(33, 156, 151);
@@ -62,4 +63,28 @@
 
 .display-none {
     display: none;
+}
+
+.table-select tr {
+    cursor: pointer;
+}
+
+.table-select .selected {
+    background: darkcyan;
+}
+
+.position-container {
+    position: relative;
+}
+
+.position-container:hover .top-right {
+    display: block;
+}
+
+.top-right {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
 }
