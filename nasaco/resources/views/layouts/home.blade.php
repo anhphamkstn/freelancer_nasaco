@@ -38,6 +38,45 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
+
+  <!-- jQuery 2.2.3 -->
+<script src="js/jquery-3.2.0.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.6 -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+<script src="admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- Morris.js charts -->
+<script src="js/raphael.min.js"></script>
+<script src="admin-lte/plugins/morris/morris.min.js"></script>
+<!-- Sparkline -->
+<script src="admin-lte/plugins/sparkline/jquery.sparkline.min.js"></script>
+<!-- jvectormap -->
+<script src="admin-lte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="admin-lte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="admin-lte/plugins/knob/jquery.knob.js"></script>
+
+<!-- Bootstrap WYSIHTML5 -->
+<script src="admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<!-- Slimscroll -->
+<script src="admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="admin-lte/dist/js/app.min.js"></script>
+
+<script src="js/xlsx.core.min.js"></script>
+
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
+@stack('script-libs')
 </head>
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">
@@ -76,43 +115,6 @@
   <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-
-<!-- jQuery 2.2.3 -->
-<script src="js/jquery-3.2.0.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button);
-</script>
-<!-- Bootstrap 3.3.6 -->
-<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-
-<script src="admin-lte/bootstrap/js/bootstrap.min.js"></script>
-<!-- Morris.js charts -->
-<script src="js/raphael.min.js"></script>
-<script src="admin-lte/plugins/morris/morris.min.js"></script>
-<!-- Sparkline -->
-<script src="admin-lte/plugins/sparkline/jquery.sparkline.min.js"></script>
-<!-- jvectormap -->
-<script src="admin-lte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script src="admin-lte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="admin-lte/plugins/knob/jquery.knob.js"></script>
-
-<!-- Bootstrap WYSIHTML5 -->
-<script src="admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-<!-- Slimscroll -->
-<script src="admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="admin-lte/plugins/fastclick/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="admin-lte/dist/js/app.min.js"></script>
-
-<script src="js/xlsx.core.min.js"></script>
-
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
 @stack('scripts')
 

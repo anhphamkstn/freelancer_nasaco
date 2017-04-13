@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Log in</title>
+    <title>Nasaco | Log in</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
@@ -71,6 +71,7 @@
     <script src="admin-lte/bootstrap/js/bootstrap.min.js"></script>
     <!-- iCheck -->
     <script src="admin-lte/plugins/iCheck/icheck.min.js"></script>
+    <script src="js/notify.min.js"></script>
     <script src="js/login.js"></script>
     <script>
         $(function () {

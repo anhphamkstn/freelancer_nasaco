@@ -1,33 +1,37 @@
 window.Controller = window.Controller || {};
 
-(function(Controller) {
-    Controller.importCsv = function() {
+
+(function (Controller) {
+    Controller.importCsv = function () {
         this.initImportCSV();
         this.getBills();
     }
 
-    Controller.importCsv.prototype.initImportCSV = function() {
-        // document.getElementById('iportCSV').addEventListener('change', handleFile, false);
+    Controller.importCsv.prototype.initImportCSV = function () {
         document.getElementById('submit').addEventListener('click', handleFile, false);
+
     }
 
-    Controller.importCsv.prototype.getBills = function() {
+    Controller.importCsv.prototype.getBills = function () {
+
         var timeRange = Controller.DateFilter.startTime ? Controller.DateFilter : { startTime: moment().subtract(3, 'years'), endTime: moment() }
+        var me = this;
         axios.get('/api/bills', {
             params: {
                 startTime: timeRange.startTime,
-                endTime: timeRange.endTime
+                endTime: timeRange.endTime,
+                perPage: 9999,
+                page: 1
             }
-        }).then(function(res) {
-            console.log(res);
+        }).then(function (res) {
 
-        }).catch(function(e) {
+            fillData(res.data.result);
 
-            alert("Có lỗi xảy ra.Vui lòng liên hệ admin.")
+        }).catch(function (e) {
+
+            alert("Có lỗi xảy ra.Vui lòng liên hệ admin:" + e)
         })
     }
-
-
 
 
 })(window.Controller);
@@ -56,7 +60,7 @@ function handleFile() {
         f = files[i];
         var reader = new FileReader();
         var name = f.name;
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             var data = e.target.result;
 
             var workbook;
@@ -148,7 +152,7 @@ function convertBillParam(arrData) {
         bills: []
     };
 
-    arrData.forEach(function(data) {
+    arrData.forEach(function (data) {
 
         result.bills.push({
             "ngay_thang_nam": data[2] + "-" + data[1] + "-" + data[0],
@@ -178,11 +182,12 @@ function callApi(bills) {
 
     axios.post('/api/bills',
         convertBillParam(bills)
-    ).then(function(e) {
+    ).then(function (e) {
         $("#loading").css("display", "none");
         alert("Nhập dữ liệu thành công.")
-    }).catch(function(e) {
+    }).catch(function (e) {
         $("#loading").css("display", "none");
         alert("Có lỗi xảy ra.Vui lòng liên hệ admin.")
     })
 }
+
