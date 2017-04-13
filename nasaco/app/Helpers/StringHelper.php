@@ -21,4 +21,15 @@ class StringHelper
 
         return $str;
     }
+
+    public static function stringToArray($string, $delimiter){
+        try{
+            $inputTrimSpace = str_replace(' ', '', $string);
+            $valueArray = explode($delimiter, $inputTrimSpace);
+            return $valueArray;
+        }
+        catch(\Exception $ex){
+            return array();
+        }
+    }
 }

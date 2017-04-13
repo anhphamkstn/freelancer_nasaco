@@ -288,6 +288,16 @@ class BillService
             $endTime = strtotime($filter['endTime']);
         $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
         $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
+
+        if (!empty($filter['postal_codes'])) {
+            $postalCodes = StringHelper::stringToArray($filter['postal_codes'], ',');
+            $query->whereIn('provinces.postal_code', $postalCodes);
+        }
+        if (!empty($filter['types'])) {
+            $types =  StringHelper::stringToArray($filter['types'], ',');
+            $query->whereIn('bills.nhom_hang', $types);
+        }
+
         $data =  $query
             ->groupby('bills.ma_buu_chinh', 'provinces.name','bills.nhom_hang')
             ->select(DB::raw('sum(bills.sl_dat_hang) as soLuongDatHang, bills.ma_buu_chinh as maBuuChinh, provinces.name, bills.nhom_hang as nhomHang'))
@@ -313,6 +323,14 @@ class BillService
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
 
+        if (!empty($filter['types'])) {
+            $types =  StringHelper::stringToArray($filter['types'], ',');
+            $query->whereIn('name', $types);
+        }
+        if (!empty($filter['postal_codes'])) {
+            $postalCodes = StringHelper::stringToArray($filter['postal_codes'], ',');
+        }
+
         $data = $query->get();
         if(!empty($data)){
             $dataTransform = null;
@@ -320,9 +338,19 @@ class BillService
                 $dataTransform['nhomHang'] = $item->name;
                 $soLuongThucXuat = 0;
                 $soLuongThanhToan = 0;
-                $bills = Bill::where('nhom_hang', $item->name)
-                    ->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)))
-                    ->get();
+
+                $queryBill = Bill::query();
+                $queryBill->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
+
+                if (!empty($postalCodes)) {
+                    $queryBill->whereIn('provinces.postal_code', $postalCodes);
+                }
+
+                $queryBill->where('nhom_hang', $item->name)
+                    ->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+
+                $bills = $queryBill->get();
+
                 foreach ($bills as $bill){
                     $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
                     $soLuongThanhToan = $soLuongThanhToan + $bill->sl_thanh_toan;
@@ -336,14 +364,15 @@ class BillService
     }
 
     /**
+     * Bao cao so luong xuat theo nhom hang, hien tai mac dinh tinh cho F1, FA
      * @param $filter
      * @return array|\Illuminate\Database\Eloquent\Collection|static[]
-     * bao cao so luong xuat theo nhom hang, hien tai mac dinh tinh cho F1, FA
+     * update: add fiter by nhom hang va tinh thanh
      */
     public function baoCaoTongSuatTheoNhom($filter)
     {
         $query = Bill::query();
-        $data = array();
+        $types = ['F1','FA'];
 
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
@@ -353,19 +382,18 @@ class BillService
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
 
-        if (!empty($filter['nhomHang'])) {
-            if ($filter['nhomHang'] != 'all') {
-                $inputTrimSpace = str_replace(' ', '', $filter['nhomHang']);
-                $filterValueArray = explode(',', $inputTrimSpace);
-                $query->whereIn('nhom_hang', $filterValueArray);
-            }
+        if (!empty($filter['types'])) {
+            $types =  StringHelper::stringToArray($filter['types'], ',');
         }
-        else{
-            $nhom_hang = ['F1','FA'];
-            $query->whereIn('nhom_hang',$nhom_hang);
+        $query->whereIn('bills.nhom_hang', $types);
+        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
+
+        if (!empty($filter['postal_codes'])) {
+            $postalCodes = StringHelper::stringToArray($filter['postal_codes'], ',');
+            $query->whereIn('provinces.postal_code', $postalCodes);
         }
 
-        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        $query->whereBetween('bills.ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
         $data =  $query
             ->select(DB::raw('sum(bills.sl_thuc_xuat) as soLuongThucXuat'))
             ->get();
@@ -379,7 +407,6 @@ class BillService
      */
     public function baoCaoXuatNhapTon($filter){
         $query = ProductCategory::query();
-        $data = array();
         $dataTransforms = array();
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
@@ -390,6 +417,13 @@ class BillService
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
 
+        if (!empty($filter['types'])) {
+            $types =  StringHelper::stringToArray($filter['types'], ',');
+            $query->whereIn('name', $types);
+        }
+        if (!empty($filter['postal_codes'])) {
+            $postalCodes = StringHelper::stringToArray($filter['postal_codes'], ',');
+        }
         $data = $query->get();
         if(!empty($data)){
             $dataTransform = null;
@@ -397,9 +431,19 @@ class BillService
                 $dataTransform['nhomHang'] = $item->name;
                 $soLuongThucXuat = 0;
                 $soLuongDathang = 0;
-                $bills = Bill::where('nhom_hang', $item->name)
-                    ->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)))
-                    ->get();
+
+                $queryBill = Bill::query();
+                $queryBill->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
+
+                if (!empty($postalCodes)) {
+                    $queryBill->whereIn('provinces.postal_code', $postalCodes);
+                }
+
+                $queryBill->where('nhom_hang', $item->name)
+                    ->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+
+                $bills = $queryBill->get();
+
                 foreach ($bills as $bill){
                     $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
                     $soLuongDathang = $soLuongDathang + $bill->sl_dat_hang;
@@ -421,6 +465,7 @@ class BillService
     public function baoCaoThongKeTheoTinh($filter){
         $query = Bill::query();
         $dataTransforms = array();
+        $types = ['F1','F2','FA','E','G'];
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
         if (!empty($filter['startTime']))
@@ -429,22 +474,26 @@ class BillService
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
 
-        if (!empty($filter['nhomHang'])) {
-            if ($filter['nhomHang'] != 'all') {
-                $inputTrimSpace = str_replace(' ', '', $filter['nhomHang']);
-                $filterValueArray = explode(',', $inputTrimSpace);
-                $query->whereIn('nhom_hang', $filterValueArray);
-            }
+        if (!empty($filter['types'])) {
+            $types =  StringHelper::stringToArray($filter['types'], ',');
         }
-        else{
-            $nhom_hang = ['F1','F2','FA','E','G'];
-            $query->whereIn('nhom_hang',$nhom_hang);
+        $query->whereIn('bills.nhom_hang', $types);
+
+        $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
+
+        if (!empty($filter['postal_codes'])) {
+            $postalCodes = StringHelper::stringToArray($filter['postal_codes'], ',');
+            $query->whereIn('provinces.postal_code', $postalCodes);
         }
-        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
-        $tinhThanhCoDatHang =  $query->distinct('ma_buu_chinh')
-            ->pluck('ma_buu_chinh');
+        $query->whereBetween('bills.ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+
+        $queryBill = $query;
+
+        $tinhThanhCoDatHang =  $query->distinct('bills.ma_buu_chinh')
+            ->pluck('bills.ma_buu_chinh');
+
         $data = null;
-        $bills = Bill::whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)))->get();
+        $bills = $queryBill->get();
         foreach($tinhThanhCoDatHang as $tinh){
             $province = $this->getProvinceByPostalCode($tinh);
             if(!empty($province)){
@@ -498,6 +547,13 @@ class BillService
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
 
+        if (!empty($filter['types'])) {
+            $types =  StringHelper::stringToArray($filter['types'], ',');
+            $query->whereIn('name', $types);
+        }
+        if (!empty($filter['postal_codes'])) {
+            $postalCodes = StringHelper::stringToArray($filter['postal_codes'], ',');
+        }
         $data = $query->get();
         if(!empty($data)){
             $dataTransform = null;
@@ -506,9 +562,19 @@ class BillService
                 $soLuongThucXuat = 0;
                 $soLuongThanhToan = 0;
                 $soLuongDathang = 0;
-                $bills = Bill::where('nhom_hang', $item->name)
-                    ->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)))
-                    ->get();
+
+                $queryBill = Bill::query();
+                $queryBill->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
+
+                if (!empty($postalCodes)) {
+                    $queryBill->whereIn('provinces.postal_code', $postalCodes);
+                }
+
+                $queryBill->where('nhom_hang', $item->name)
+                    ->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+
+                $bills = $queryBill->get();
+
                 foreach ($bills as $bill){
                     $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
                     $soLuongThanhToan = $soLuongThanhToan + $bill->sl_thanh_toan;
@@ -530,8 +596,6 @@ class BillService
      */
     public function baoCaoDanhSachTinhThanhCoDatHang($filter){
         $query = Bill::query();
-        $data = array();
-
         $startTime = strtotime("-30 day");
         $endTime = strtotime("now");
         if (!empty($filter['startTime']))
@@ -540,9 +604,19 @@ class BillService
         if (!empty($filter['endTime']))
             $endTime = strtotime($filter['endTime']);
 
-        $query->whereBetween('ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
+        if (!empty($filter['types'])) {
+            $types =  StringHelper::stringToArray($filter['types'], ',');
+            $query->whereIn('bills.nhom_hang', $types);
+        }
+        $query->whereBetween('bills.ngay_thang_nam', array(date('Y-m-d', $startTime), date('Y-m-d', $endTime)));
         $query->whereNotNull('bills.ma_buu_chinh');
         $query->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
+
+        if (!empty($filter['postal_codes'])) {
+            $postalCodes = StringHelper::stringToArray($filter['postal_codes'], ',');
+            $query->whereIn('provinces.postal_code', $postalCodes);
+        }
+
         $data =  $query
             ->distinct('bills.ma_buu_chinh', 'provinces.name','provinces.code')
             ->select('bills.ma_buu_chinh', 'provinces.name','provinces.code')
