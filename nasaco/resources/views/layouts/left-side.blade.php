@@ -8,7 +8,7 @@
             <i class="fa fa-tachometer" aria-hidden="true"></i> <span>Dashboard</span>
           </a>
         </li>
-        <li>
+        <li id="import-excel" class="display-none">
           <a href="/import">
             <i class="fa fa-file-excel-o" aria-hidden="true"></i> <span>Import Excel</span>
           </a>
@@ -22,5 +22,5 @@
 
 
   @push('scripts')
-    
+
   @endpush

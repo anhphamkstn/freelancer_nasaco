@@ -243,7 +243,7 @@
                 <div class="report-title">Cơ cấu hàng theo nhóm</div>
                 <div class="box-body">
                     <div id="report-4-container" style="width:100%;padding:30px 0px">
-                        
+
                     </div>
                 </div>
             </div>
@@ -267,6 +267,15 @@
     <script src="js/dashboard.js"></script>
 
     <script>
+        axios.get('/api/user')
+            .then(data => {
+                let role = data.data.roles[0].order;
+                if(role == 1) {
+                    $('#import-excel').removeClass('display-none');
+                }
+            }).catch(error => {
+                console.log(error);
+            })
         window.Controller = window.Controller || {};
         var controller = window.Controller;
         var thisYear = (new Date()).getFullYear();

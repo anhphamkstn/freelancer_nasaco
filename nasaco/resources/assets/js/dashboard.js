@@ -546,7 +546,6 @@ window.Controller = window.Controller || {};
     }
 
     Controller.Dashboard.prototype.drawReport4 = function(datas) {
-        console.log(datas);
         var soLieu = [];
         datas.result.forEach(function(e) {
             soLieu.push(e.soLuongDatHang);
