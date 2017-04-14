@@ -24,7 +24,7 @@
             <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(0deg) translate(0,-60px);transform:rotate(0deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(30deg) translate(0,-60px);transform:rotate(30deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(60deg) translate(0,-60px);transform:rotate(60deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(90deg) translate(0,-60px);transform:rotate(90deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(120deg) translate(0,-60px);transform:rotate(120deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(150deg) translate(0,-60px);transform:rotate(150deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(180deg) translate(0,-60px);transform:rotate(180deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(210deg) translate(0,-60px);transform:rotate(210deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(240deg) translate(0,-60px);transform:rotate(240deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(270deg) translate(0,-60px);transform:rotate(270deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(300deg) translate(0,-60px);transform:rotate(300deg) translate(0,-60px);border-radius:10px;position:absolute;'></div><div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(330deg) translate(0,-60px);transform:rotate(330deg) translate(0,-60px);border-radius:10px;position:absolute;'>
             </div>
         </div>
-    </div>    
+    </div>
     <div class="row">
         <div class="col-md-12" >
             <div class="box box-solid">
@@ -121,7 +121,7 @@
                             </tr>
                         </thead>
                         <tbody id="table_3">
-                            
+
                         </tbody>
                     </table>
                 </div>
@@ -138,12 +138,12 @@
                             <h5 class="box-title">TỈNH THÀNH</h5>
                             <div class="top-right">
                                 <button onclick="dashboard.clearSelected('list-provice')" class="btn btn-xs"><i class="fa fa-times" aria-hidden="true"></i></button>
-                                <button class="btn btn-xs btn-success"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                <button onclick="dashboard.fillData()" class="btn btn-xs btn-success"><i class="fa fa-search" aria-hidden="true"></i></button>
                             </div>
                         </div>
                         <div class="box-body" style="height: 200px;overflow-y: scroll; padding-top: 0;">
                             <table  id="list-provice" class="table-select" style="margin: 5px auto; font-size: 17px; width: 100%;">
-                                
+
                             </table>
                         </div>
                     </div>
@@ -154,7 +154,7 @@
                             <h5 class="box-title">NHÓM HÀNG</h5>
                             <div class="top-right">
                                 <button onclick="dashboard.clearSelected('list-type')" class="btn btn-xs"><i class="fa fa-times" aria-hidden="true"></i></button>
-                                <button class="btn btn-xs btn-success"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                <button onclick="dashboard.fillData()" class="btn btn-xs btn-success"><i class="fa fa-search" aria-hidden="true"></i></button>
                             </div>
                         </div>
                         <div class="box-body">
@@ -188,8 +188,8 @@
                             @include('dashboard.loading')
                         </div>
                         <div class="report-title">F1</div>
-                        <div class="box-body">
-                            <canvas id="report-f1" width="400" height="260" style="width: 100%; height: 260px;"></canvas>
+                        <div id="report-f1-container" class="box-body">
+
                         </div>
                     </div>
                 </div>
@@ -199,8 +199,8 @@
                             @include('dashboard.loading')
                         </div>
                         <div class="report-title">FA</div>
-                        <div class="box-body">
-                            <canvas id="report-fa" width="400" height="260" style="width: 100%; height: 260px;"></canvas>
+                        <div id="report-fa-container" class="box-body">
+
                         </div>
                     </div>
                 </div>
@@ -216,7 +216,7 @@
         </div>
         <div class="col-md-2">
             <div class="box box-solid box-height-280">
-                
+
                 <div class="box-body">
                     <img src="img/img.jpg" alt="logo" style="width: 100%; height: 260px;">
                 </div>
@@ -229,8 +229,8 @@
                 </div>
                 <div class="report-title">Cơ cấu hàng theo tỉnh</div>
                 <div class="box-body">
-                    <div style="overflow-y : scroll; position: relative; margin-top:20px; height:230px;">
-                        <canvas id="report-3" width="400" height="560" style="width: 100% ;height:560px"></canvas>
+                    <div id="report-3-container" style="overflow-y : scroll; position: relative; margin-top:20px; height:230px;">
+
                     </div>
                 </div>
             </div>
@@ -242,14 +242,14 @@
                 </div>
                 <div class="report-title">Cơ cấu hàng theo nhóm</div>
                 <div class="box-body">
-                    <div style="width:100%;padding:30px 0px">
-                        <canvas id="report-4" width="270" height="180" style="width: 270px; height: 180px;"></canvas>
+                    <div id="report-4-container" style="width:100%;padding:30px 0px">
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
 @endsection
 
 
@@ -265,16 +265,16 @@
     <script src="js/DaDashboard.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="js/dashboard.js"></script>
-    
+
     <script>
         window.Controller = window.Controller || {};
         var controller = window.Controller;
-        var thisYear = (new Date()).getFullYear();    
+        var thisYear = (new Date()).getFullYear();
         var start = new Date("1/1/" + thisYear);
         var defaultStart = moment(start.valueOf());
         controller.DateFilter = { startTime: defaultStart.format('YYYY-MM-DD'), endTime: moment().format('YYYY-MM-DD') };
         $(function () {
-            
+
             $('#date-range-picker').daterangepicker({
                 "ranges": {
                     "Hôm nay": [
@@ -316,7 +316,7 @@
                 dashboard.getData();
             });
         });
-        
+
     </script>
-    
+
 @endpush

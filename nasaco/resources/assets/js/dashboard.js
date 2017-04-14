@@ -2,6 +2,7 @@ window.Controller = window.Controller || {};
 
 (function(Controller) {
     Controller.Dashboard = function() {
+        this.initType();
         this.getData();
     }
 
@@ -15,6 +16,13 @@ window.Controller = window.Controller || {};
             soLieu[e.nhomHang] = e;
             total_tong_xuat += e.soLuongThucXuat;
         });
+        for(let item of this.types) {
+            if(!soLieu[item]) {
+                soLieu[item] = {};
+                soLieu[item].soLuongThucXuat = 0;
+                soLieu[item].soLuongThanhToan = 0;
+            }
+        }
 
         var value = soLieu.F1.soLuongThucXuat + soLieu.FA.soLuongThucXuat;
 
@@ -88,6 +96,15 @@ window.Controller = window.Controller || {};
             soLieu[e.nhomHang] = e;
         });
 
+        for(let item of this.types) {
+            if(!soLieu[item]) {
+                soLieu[item] = {};
+                soLieu[item].soLuongThucXuat = 0;
+                soLieu[item].soLuongDatHang = 0;
+                soLieu[item].soLuongTon = 0;
+            }
+        }
+
         var content = "<tr>\
                         <td>TỔNG NHẬP</td>\
                         <td>" + (soLieu.F1.soLuongDatHang + soLieu.F2.soLuongDatHang + soLieu.FA.soLuongDatHang) + "</td>\
@@ -112,8 +129,10 @@ window.Controller = window.Controller || {};
     };
 
     Controller.Dashboard.prototype.getData = function() {
-        this.initType();
         this.initProvince();
+    }
+
+    Controller.Dashboard.prototype.fillData = function() {
         this.callApiTongSuatThanhToan();
         this.callApiXuatNhapTon();
         this.callApiListProvince();
@@ -124,7 +143,9 @@ window.Controller = window.Controller || {};
         let me = this;
         let tb = $('#list-type');
         let trs = $(tb.children()[0]).children();
+        this.types = [];
         for(let tr of trs) {
+            this.types.push($(tr).data('value'));
             $(tr).click(() => {
                 me.toggleSelect(tr);
             });
@@ -142,6 +163,7 @@ window.Controller = window.Controller || {};
         })
         .then(function(response) {
             me.fillListProvice(response.data);
+            me.fillData();
         }).catch(function(e) {
             console.log(e);
             alert("Có lỗi xảy ra.Vui lòng liên hệ admin.")
@@ -161,7 +183,9 @@ window.Controller = window.Controller || {};
         axios.get('/api/baoCao/xuatNhapTon', {
                 params: {
                     startTime: timeRange.startTime,
-                    endTime: timeRange.endTime
+                    endTime: timeRange.endTime,
+                    postal_codes: me.getSelectedValue('list-provice').toString(),
+                    types: me.getSelectedValue('list-type').toString()
                 }
             })
             .then(function(response) {
@@ -196,11 +220,12 @@ window.Controller = window.Controller || {};
 
         $("#loading-1").css("display", "block");
         $("#loading-3").css("display", "block");
-
         axios.get('/api/baoCao/tongSuatThanhToanTheoNhomHang', {
                 params: {
                     startTime: timeRange.startTime,
-                    endTime: timeRange.endTime
+                    endTime: timeRange.endTime,
+                    postal_codes: me.getSelectedValue('list-provice').toString(),
+                    types: me.getSelectedValue('list-type').toString()
                 }
             })
             .then(function(response) {
@@ -226,7 +251,9 @@ window.Controller = window.Controller || {};
         axios.get('/api/baoCao/thongKeTheoTinh', {
                 params: {
                     startTime: timeRange.startTime,
-                    endTime: timeRange.endTime
+                    endTime: timeRange.endTime,
+                    postal_codes: me.getSelectedValue('list-provice').toString(),
+                    types: me.getSelectedValue('list-type').toString()
                 }
             })
             .then(function(response) {
@@ -255,7 +282,7 @@ window.Controller = window.Controller || {};
         table.append(tbody);
         if (data.result.length == 0) return;
         data.result.forEach(function(e) {
-            let tr = $('<tr data-value="' + e.postal_code +  '"><td>' + e.name + "</td></tr>");
+            let tr = $('<tr data-value="' + e.ma_buu_chinh +  '"><td>' + e.name + "</td></tr>");
             tr.click(() => {
                 me.toggleSelect(tr);
             });
@@ -298,7 +325,9 @@ window.Controller = window.Controller || {};
         axios.get('/api/baoCao/thongKeTheoNhomHang', {
                 params: {
                     startTime: timeRange.startTime,
-                    endTime: timeRange.endTime
+                    endTime: timeRange.endTime,
+                    postal_codes: me.getSelectedValue('list-provice').toString(),
+                    types: me.getSelectedValue('list-type').toString()
                 }
             })
             .then(function(response) {
@@ -364,7 +393,7 @@ window.Controller = window.Controller || {};
             dataThucXuat.push(e.dataTheoNhom[0].soLuongThucXuat);
             dataThanhToan.push(e.dataTheoNhom[0].soLuongThanhToan);
         });
-
+        $('#report-f1-container').html('<canvas id="report-f1" width="400" height="260" style="width: 100%; height: 260px;"></canvas>');
         var item = document.getElementById('report-f1');
         var data = {
             labels: labels,
@@ -385,7 +414,7 @@ window.Controller = window.Controller || {};
                 }
             ]
         };
-        var myBarChart = new Chart(item, {
+        this.myBarChart = new Chart(item, {
             type: 'bar',
             data: data,
             options: {
@@ -413,7 +442,7 @@ window.Controller = window.Controller || {};
             dataThucXuat.push(e.dataTheoNhom[2].soLuongThucXuat);
             dataThanhToan.push(e.dataTheoNhom[2].soLuongThanhToan);
         });
-
+        $('#report-fa-container').html('<canvas id="report-fa" width="400" height="260" style="width: 100%; height: 260px;"></canvas>');
         var item = document.getElementById('report-fa');
         var data = {
             labels: labels,
@@ -464,7 +493,8 @@ window.Controller = window.Controller || {};
             dataTheoNhomNganh.G.push(e.dataTheoNhom[4].soLuongDatHang);
 
         });
-
+        let height = source.result.length * 20 + 20;
+        $('#report-3-container').html('<canvas id="report-3" width="400" height="'+ height +'" style="width: 100% ;height:'+ height +'px"></canvas>');
         var item = document.getElementById('report-3');
         var data = {
             labels: labels,
@@ -516,12 +546,12 @@ window.Controller = window.Controller || {};
     }
 
     Controller.Dashboard.prototype.drawReport4 = function(datas) {
-
+        console.log(datas);
         var soLieu = [];
         datas.result.forEach(function(e) {
             soLieu.push(e.soLuongDatHang);
         });
-
+        $('#report-4-container').html('<canvas id="report-4" width="270" height="180" style="width: 270px; height: 180px;"></canvas>');
         var item = document.getElementById('report-4');
         var data = {
             labels: ["F1", "F2", "FA", "E", "G"],
