@@ -87,62 +87,96 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Hóa đơn</h4>
             </div>
+
             <div class="box-body">
                 <div class="box-body">
 
-                    <!--{ title: "Ngày" },
-                    { title: "Mặt hàng" },
-                    { title: "Nhóm hàng" },
-                    { title: "Diễn giải" },	
-                    //{ title: "Tỉnh thành" },
-                    { title: "ĐVT" },
-                    { title: "SL Đặt hàng" },	 
-                    { title: "SL Thực xuất" },	 
-                    { title: "SL Thanh Toán" },
-                    { title: "Còn lại " },
-                    { title: "Đơn Giá " },	
-                    { title: "Thanh toán" },-->
                     <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">Ngày</label>
+                        <label for="bill_date" class="col-sm-2 control-label">Ngày</label>
 
                         <div class="col-sm-10">
-                            <input type="email" class="form-control" id="bill_date">
+                            <input type="text" class="form-control" id="bill_date" placeholder="Ngày">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bill_mat_hang" class="col-sm-2 control-label">Mặt hàng</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="bill_mat_hang" placeholder="Mặt hàng">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bill_nhom_hang" class="col-sm-2 control-label">Nhóm hàng</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="bill_nhom_hang" placeholder="Nhóm hàng">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">Mặt hàng</label>
+                        <label for="bill_dien_giai" class="col-sm-2 control-label">Diễn giải</label>
 
                         <div class="col-sm-10">
-                            <input type="email" class="form-control" id="bill_mat_hang" placeholder="Mặt hàng">
+                            <input type="text" class="form-control" id="bill_dien_giai" placeholder="Diễn giải">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">Nhóm hàng</label>
+                        <label for="bill_don_vi_tinh" class="col-sm-2 control-label">Đơn vị tính</label>
 
                         <div class="col-sm-10">
-                            <input type="email" class="form-control" id="bill_nhom_hang" placeholder="Nhóm hàng">
+                            <input type="text" class="form-control" id="bill_don_vi_tinh" placeholder="Đơn vị tính">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">Diễn giải</label>
+                        <label for="bill_so_luong_dat_hang" class="col-sm-2 control-label">Số lượng đặt hàng</label>
 
                         <div class="col-sm-10">
-                            <input type="email" class="form-control" id="bill_dien_giai" placeholder="Diễn giải">
+                            <input type="text" class="form-control" id="bill_so_luong_dat_hang" placeholder="Số lượng đặt hàng">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                        <label for="bill_so_luong_thuc_xuat" class="col-sm-2 control-label">Số lượng thực xuất</label>
 
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            <input type="text" class="form-control" id="bill_so_luong_thuc_xuat" placeholder="Số lượng thực xuất">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bill_so_luong_thanh_toan" class="col-sm-2 control-label">Số lượng thanh toán</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="bill_so_luong_thanh_toan" placeholder="Số lượng thanh toán">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bill_con_lai" class="col-sm-2 control-label">Còn lại</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="bill_con_lai" placeholder="Còn lại">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bill_don_gia" class="col-sm-2 control-label">Đơn giá</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="bill_don_gia" placeholder="Đơn giá">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bill_thanh_toan" class="col-sm-2 control-label">Thanh toán thành tiền</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="bill_thanh_toan" placeholder="Thanh toán thành tiền">
                         </div>
                     </div>
                 
                 </div>
             </div>
+
             <div class="box-footer">
-                <button id="submit" type="button" class="btn btn-default" >Cập nhật</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button id="submit" type="button" class="btn btn-default pull-right" >Cập nhật</button>
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Đóng</button>
             </div>
             <div style="display:none" id="loading" class="overlay">
                 <div class='uil-default-css' style='transform:scale(0.53);margin:auto;height: 50px;'>
@@ -270,14 +304,21 @@
                     { title: "Còn lại " },
                     { title: "Đơn Giá " },	
                     { title: "Thanh toán" },
-                    { title: "Sửa" },
+                   // { title: "Sửa" },
                     { title: "Xóa" }
                 ],
-                columnDefs: [ {
+                columnDefs: [
+                     {
                     "targets": -1,
                     "data": null,
                     "defaultContent": "<button class='delete'>Xóa</button>"
-                } ]                      
+                }
+                // {
+                //     "targets": -2,
+                //     "data": null,
+                //     "defaultContent": "<button class='edit'>Sửa</button>"
+                // } 
+                ]                      
             });
 
             $('#table-bills tbody').off('click');

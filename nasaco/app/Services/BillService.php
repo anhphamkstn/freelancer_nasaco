@@ -431,6 +431,7 @@ class BillService
                 $dataTransform['nhomHang'] = $item->name;
                 $soLuongThucXuat = 0;
                 $soLuongDathang = 0;
+                $soLuongNhapHang = 0;
 
                 $queryBill = Bill::query();
                 $queryBill->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
