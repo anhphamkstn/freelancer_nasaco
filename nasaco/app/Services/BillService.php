@@ -199,6 +199,7 @@ class BillService
                 'soLuongDatHang'=>$bill->sl_dat_hang,
                 'soLuongThucXuat'=>$bill->sl_thuc_xuat,
                 'soLuongThanhToan'=>$bill->sl_thanh_toan,
+                'soLuongHangNhap'=>$bill->sl_hang_nhap,
                 'conLai'=>$bill->con_lai,
                 'donGia'=>$bill->don_gia,
                 'thanhTienThanhToan'=>$bill->thanh_tien_thanh_toan,
@@ -339,6 +340,7 @@ class BillService
                 $dataTransform['nhomHang'] = $item->name;
                 $soLuongThucXuat = 0;
                 $soLuongThanhToan = 0;
+                $soLuongNhapHang = 0;
 
                 $queryBill = Bill::query();
                 $queryBill->leftJoin('provinces', 'provinces.postal_code', '=', 'bills.ma_buu_chinh');
@@ -355,9 +357,11 @@ class BillService
                 foreach ($bills as $bill){
                     $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
                     $soLuongThanhToan = $soLuongThanhToan + $bill->sl_thanh_toan;
+                    $soLuongNhapHang = $soLuongNhapHang + $bill->sl_hang_nhap;
                 }
                 $dataTransform['soLuongThucXuat'] = $soLuongThucXuat;
                 $dataTransform['soLuongThanhToan'] = $soLuongThanhToan;
+                $dataTransform['soLuongHangNhap'] = $soLuongNhapHang;
                 $dataTransforms[] = $dataTransform;
             }
         }

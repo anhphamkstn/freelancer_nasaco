@@ -21,6 +21,7 @@ window.Controller = window.Controller || {};
                 soLieu[item] = {};
                 soLieu[item].soLuongThucXuat = 0;
                 soLieu[item].soLuongThanhToan = 0;
+                soLieu[item].soLuongHangNhap = 0;
             }
         }
 
@@ -64,6 +65,12 @@ window.Controller = window.Controller || {};
                                 <td>" + (soLieu.F1.soLuongThucXuat - soLieu.F1.soLuongThanhToan) + "</td>\
                                 <td>" + (soLieu.F2.soLuongThucXuat - soLieu.F2.soLuongThanhToan) + "</td>\
                                 <td>" + (soLieu.FA.soLuongThucXuat - soLieu.FA.soLuongThanhToan) + "</td>\
+                                </tr>\
+                            <tr>\
+                                <td>HÀNG NHẬP</td>\
+                                <td>" + (soLieu.F1.soLuongHangNhap) + "</td>\
+                                <td>" + (soLieu.F2.soLuongHangNhap) + "</td>\
+                                <td>" + (soLieu.FA.soLuongHangNhap) + "</td>\
                             </tr>"
         $('#table_1').html(content);
 
@@ -81,7 +88,12 @@ window.Controller = window.Controller || {};
                     <td></td>\
                     <td>" + (soLieu.E.soLuongThucXuat - soLieu.E.soLuongThanhToan) + "</td>\
                     <td>" + (soLieu.G.soLuongThucXuat - soLieu.G.soLuongThanhToan) + "</td>\
-                </tr>"
+                </tr>\
+                <tr>\
+                    <td></td>\
+                    <td>" + soLieu.E.soLuongHangNhap + "</td>\
+                    <td>" + soLieu.G.soLuongHangNhap + "</td>\
+                </tr>";
 
 
         $('#table_2').html(content);
@@ -90,6 +102,8 @@ window.Controller = window.Controller || {};
     Controller.Dashboard.prototype.filltable = function(data) {
 
         var soLieu = {};
+
+        console.log(data);
 
         if (data.result.length == 0) return;
         data.result.forEach(function(e) {
