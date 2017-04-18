@@ -28,6 +28,7 @@ class BillService
         'sl_dat_hang',
         'sl_thuc_xuat',
         'sl_thanh_toan',
+        'sl_hang_nhap',
         'con_lai',
         'don_gia',
         'thanh_tien_thanh_toan',
@@ -448,10 +449,12 @@ class BillService
                 foreach ($bills as $bill){
                     $soLuongThucXuat = $soLuongThucXuat + $bill->sl_thuc_xuat;
                     $soLuongDathang = $soLuongDathang + $bill->sl_dat_hang;
+                    $soLuongNhapHang = $soLuongNhapHang + $bill->sl_hang_nhap;
                 }
                 $dataTransform['soLuongThucXuat'] = $soLuongThucXuat;
                 $dataTransform['soLuongDatHang'] = $soLuongDathang;
                 $dataTransform['soLuongTon'] = $soLuongDathang - $soLuongThucXuat;
+                $dataTransform['soLuongHangNhap'] = $soLuongNhapHang;
                 $dataTransforms[] = $dataTransform;
             }
         }
