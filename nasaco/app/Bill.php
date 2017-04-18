@@ -24,5 +24,7 @@ class Bill extends Model
         'sl_thanh_toan',
         'con_lai',
         'don_gia',
-        'thanh_tien_thanh_toan'];
+        'thanh_tien_thanh_toan',
+        'sl_hang_nhap',
+    ];
 }
