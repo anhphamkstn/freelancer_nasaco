@@ -123,14 +123,16 @@
                         } else {
                             $.notify("Error", {
                                 globalPosition: 'bottom left',
-                                className: 'success',
+                                className: 'error',
                             });
                         }
                     });
                 },
                 error: function(data) {
-                    console.log('--error--');
-                    console.log(data);
+                    $.notify("Error", {
+                        globalPosition: 'bottom left',
+                        className: 'error',
+                    });
                 }
             });
         }

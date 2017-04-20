@@ -93,7 +93,7 @@
                 } else {
                     $.notify("Error", {
                         globalPosition: 'bottom left',
-                        className: 'success',
+                        className: 'error',
                     });
                 }
             });

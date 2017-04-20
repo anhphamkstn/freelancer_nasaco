@@ -54,8 +54,11 @@ class UserController extends Controller
     		$errors = $validator->errors();
 		    return Response::response($errors,421);
 		}
+        $role = Role::where('code',$request->role_code)->first();
+        if(!$role) {
+            return Response::response(['role_invalid' => ['Role invalid']],421);
+        }
 		$user = $this->create($data);
-		$role = Role::where('code',$request->role_code)->first();
 		$user->roles()->attach($role->id);
     	return $user;
     }
