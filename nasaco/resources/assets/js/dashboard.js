@@ -35,10 +35,13 @@ window.Controller = window.Controller || {};
         });
         chart.options.width = 120;
         chart.options.height = 120;
+        chart.options.redColor = "#f55072";
         chart.options.redFrom = 0;
         chart.options.redTo = 50;
+        chart.options.yellowColor = "#f0cb18";
         chart.options.yellowFrom = 50;
         chart.options.yellowTo = 75;
+        chart.options.greenColor = "#12c5a7";
         chart.options.greenFrom = 75;
         chart.options.greenTo = 100;
         chart.draw(
@@ -379,7 +382,9 @@ window.Controller = window.Controller || {};
             },
 
             "areasSettings": {
-                "autoZoom": true
+                "autoZoom": true,
+                "colorSolid": '#219c97',
+                "color": "#aee7de"
             },
 
             "valueLegend": {

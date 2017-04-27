@@ -3,12 +3,12 @@
     <section class="sidebar">
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
-        <li>
+        <li id="home-db" class="display-none">
           <a href="/">
             <i class="fa fa-tachometer" aria-hidden="true"></i> <span>Dashboard</span>
           </a>
         </li>
-        <li id="import-excel" class="display-none">
+        <li id="import-excel">
           <a href="/import">
             <i class="fa fa-file-excel-o" aria-hidden="true"></i> <span>Import Excel</span>
           </a>

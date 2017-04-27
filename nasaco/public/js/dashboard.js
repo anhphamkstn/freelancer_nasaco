@@ -10810,7 +10810,9 @@ return jQuery;
             },
 
             "areasSettings": {
-                "autoZoom": true
+                "autoZoom": true,
+                "colorSolid": '#219c97',
+                "color": "#aee7de"
             },
 
             "valueLegend": {

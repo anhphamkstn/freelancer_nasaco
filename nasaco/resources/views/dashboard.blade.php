@@ -271,7 +271,7 @@
             .then(data => {
                 let role = data.data.roles[0].order;
                 if(role == 1) {
-                    $('#import-excel').removeClass('display-none');
+                    $('#home-db').removeClass('display-none');
                 }
             }).catch(error => {
                 console.log(error);

@@ -23,12 +23,12 @@ Route::get('/register', function () {
 
 Route::group(['middleware' => 'AuthApi'], function () {
     Route::get('/', function (Request $request) {
+        $role = $request->auth_user_role;
+        if($role > 1) return redirect()->route('import');
 	    return view('dashboard');
 	});
 
 	Route::get('/import', function (Request $request) {
-        $role = $request->auth_user_role;
-        if($role > 1) return 'Forbiden';
 	    return view('importExcel');
-	});
+	})->name('import');
 });
